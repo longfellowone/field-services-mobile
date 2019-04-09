@@ -56,6 +56,9 @@ class MyApp extends StatelessWidget {
 //// Ctrl+Shift+I
 //// Shift+Del
 ////
+//// sout
+//// soutm
+////
 //// Prefix stless: Create a new subclass of StatelessWidget.
 //// Prefix stful: Create a new subclass of StatefulWidget and it’s associated State subclass.
 ////
