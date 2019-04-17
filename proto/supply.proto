@@ -1,0 +1,139 @@
+syntax = "proto3";
+
+package server;
+
+service Supply {
+    // Ordering
+    rpc CreateOrder (CreateOrderRequest) returns (CreateOrderResponse) {}
+    rpc SendOrder (SendOrderRequest) returns (SendOrderResponse) {}
+    rpc AddOrderItem (AddOrderItemRequest) returns (AddOrderItemResponse) {}
+    rpc RemoveOrderItem (RemoveOrderItemRequest) returns (RemoveOrderItemResponse) {}
+    rpc ReceiveOrderItem (ReceiveOrderItemRequest) returns (ReceiveOrderItemResponse) {}
+    rpc ModifyRequestedQuantity (ModifyRequestedQuantityRequest) returns (ModifyRequestedQuantityResponse) {}
+    rpc FindOrder  (FindOrderRequest) returns (FindOrderResponse);
+    rpc FindProjectOrderDates (FindProjectOrderDatesRequest) returns (FindProjectOrderDatesResponse);
+    // ProductSearch
+    rpc ProductSearch (ProductSearchRequest) returns (ProductSearchResponse) {}
+}
+
+// CreateOrder
+message CreateOrderRequest {
+    string id = 1;
+    string project_id = 2;
+}
+message CreateOrderResponse {}
+
+// AddOrderItem
+message AddOrderItemRequest {
+    string id = 1;
+    string product_id = 2;
+    string name = 3;
+    string uom = 4;
+}
+message AddOrderItemResponse {}
+
+// RemoveOrderItem
+message RemoveOrderItemRequest {
+    string id = 1;
+    string product_id = 2;
+}
+message RemoveOrderItemResponse {}
+
+// ModifyRequestedQuantity
+message ModifyRequestedQuantityRequest {
+    string id = 1;
+    string product_id = 2;
+    uint32 quantity = 3;
+}
+message ModifyRequestedQuantityResponse {}
+
+// SendOrder
+message SendOrderRequest {
+    string id = 1;
+}
+message SendOrderResponse {}
+
+// ReceiveOrderItem
+message ReceiveOrderItemRequest {
+    string id = 1;
+    string product_id = 2;
+    uint32 quantity = 3;
+}
+message ReceiveOrderItemResponse {}
+
+
+// FindProjectOrderDates
+message FindProjectOrderDatesRequest {
+    string project_id = 1;
+}
+message FindProjectOrderDatesResponse {
+    repeated Order orders = 1;
+}
+
+// An order
+message Order {
+    string id = 1;
+    int64 date = 2;
+    string status = 3;
+}
+
+// FindOrder
+message FindOrderRequest {
+    string id = 1;
+}
+message FindOrderResponse {
+    int64 date = 1;
+    string status = 2;
+    repeated Item items = 3;
+}
+
+// An order item
+message Item {
+    string product_id = 1;
+    string name = 2;
+    string uom = 3;
+    uint32 quantity_requested = 4;
+    uint32 quantity_received = 5;
+    string item_status = 6;
+}
+
+// ProductSearch
+message ProductSearchRequest {
+    string name = 1;
+}
+message ProductSearchResponse {
+    repeated Result results = 5;
+}
+message Result {
+    string product_uuid = 1;
+    string category = 2;
+    string name = 3;
+    string uom = 4;
+    repeated Index indexes = 5;
+}
+message Index {
+    int32 index = 1;
+}
+
+// Perchasing
+service Purchasing {
+    //rpc ProcessOrder (ProcessOrderRequest) returns (ProcessOrderResponse) {}
+    //rpc 000 (Request) returns (Response) {}
+}
+
+
+/* eslint-disable */
+
+/** Generate GO proto
+protoc --go_out=plugins=grpc:. *.proto
+ */
+
+/** Generate JS proto
+ protoc -I=. ./proto/supply.proto \
+  --js_out=import_style=commonjs:./src/Order\
+  --grpc-web_out=import_style=commonjs,mode=grpcwebtext:./src/Order
+ */
+
+//  import _"github.com/jnewmano/grpc-json-proxy/codec"
+//  go run github.com/jnewmano/grpc-json-proxy grpc-json-proxy
+//  http://www.objgen.com/json?demo=true
