@@ -1,7 +1,8 @@
 # Field Services Mobile
 
-Flutter mobile app  
-Golang server [field-services](https://github.com/longfellowone/field-services)
+Flutter mobile client
+
+Golang server: [field-services](https://github.com/longfellowone/field-services)
 
 ### Todo
 

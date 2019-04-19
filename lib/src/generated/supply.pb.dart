@@ -13,6 +13,9 @@ class CreateOrderRequest extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('CreateOrderRequest', package: const $pb.PackageName('server'))
     ..aOS(1, 'id')
     ..aOS(2, 'projectId')
+    ..aOS(3, 'name')
+    ..aOS(4, 'foreman')
+    ..aOS(5, 'email')
     ..hasRequiredFields = false
   ;
 
@@ -37,6 +40,21 @@ class CreateOrderRequest extends $pb.GeneratedMessage {
   set projectId($core.String v) { $_setString(1, v); }
   $core.bool hasProjectId() => $_has(1);
   void clearProjectId() => clearField(2);
+
+  $core.String get name => $_getS(2, '');
+  set name($core.String v) { $_setString(2, v); }
+  $core.bool hasName() => $_has(2);
+  void clearName() => clearField(3);
+
+  $core.String get foreman => $_getS(3, '');
+  set foreman($core.String v) { $_setString(3, v); }
+  $core.bool hasForeman() => $_has(3);
+  void clearForeman() => clearField(4);
+
+  $core.String get email => $_getS(4, '');
+  set email($core.String v) { $_setString(4, v); }
+  $core.bool hasEmail() => $_has(4);
+  void clearEmail() => clearField(5);
 }
 
 class CreateOrderResponse extends $pb.GeneratedMessage {
@@ -222,6 +240,7 @@ class ModifyRequestedQuantityResponse extends $pb.GeneratedMessage {
 class SendOrderRequest extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('SendOrderRequest', package: const $pb.PackageName('server'))
     ..aOS(1, 'id')
+    ..aOS(2, 'comments')
     ..hasRequiredFields = false
   ;
 
@@ -241,6 +260,11 @@ class SendOrderRequest extends $pb.GeneratedMessage {
   set id($core.String v) { $_setString(0, v); }
   $core.bool hasId() => $_has(0);
   void clearId() => clearField(1);
+
+  $core.String get comments => $_getS(1, '');
+  set comments($core.String v) { $_setString(1, v); }
+  $core.bool hasComments() => $_has(1);
+  void clearComments() => clearField(2);
 }
 
 class SendOrderResponse extends $pb.GeneratedMessage {
@@ -315,56 +339,14 @@ class ReceiveOrderItemResponse extends $pb.GeneratedMessage {
   static ReceiveOrderItemResponse _defaultInstance;
 }
 
-class FindProjectOrderDatesRequest extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo('FindProjectOrderDatesRequest', package: const $pb.PackageName('server'))
-    ..aOS(1, 'projectId')
-    ..hasRequiredFields = false
-  ;
-
-  FindProjectOrderDatesRequest() : super();
-  FindProjectOrderDatesRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
-  FindProjectOrderDatesRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
-  FindProjectOrderDatesRequest clone() => FindProjectOrderDatesRequest()..mergeFromMessage(this);
-  FindProjectOrderDatesRequest copyWith(void Function(FindProjectOrderDatesRequest) updates) => super.copyWith((message) => updates(message as FindProjectOrderDatesRequest));
-  $pb.BuilderInfo get info_ => _i;
-  static FindProjectOrderDatesRequest create() => FindProjectOrderDatesRequest();
-  FindProjectOrderDatesRequest createEmptyInstance() => create();
-  static $pb.PbList<FindProjectOrderDatesRequest> createRepeated() => $pb.PbList<FindProjectOrderDatesRequest>();
-  static FindProjectOrderDatesRequest getDefault() => _defaultInstance ??= create()..freeze();
-  static FindProjectOrderDatesRequest _defaultInstance;
-
-  $core.String get projectId => $_getS(0, '');
-  set projectId($core.String v) { $_setString(0, v); }
-  $core.bool hasProjectId() => $_has(0);
-  void clearProjectId() => clearField(1);
-}
-
-class FindProjectOrderDatesResponse extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo('FindProjectOrderDatesResponse', package: const $pb.PackageName('server'))
-    ..pc<Order>(1, 'orders', $pb.PbFieldType.PM,Order.create)
-    ..hasRequiredFields = false
-  ;
-
-  FindProjectOrderDatesResponse() : super();
-  FindProjectOrderDatesResponse.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
-  FindProjectOrderDatesResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
-  FindProjectOrderDatesResponse clone() => FindProjectOrderDatesResponse()..mergeFromMessage(this);
-  FindProjectOrderDatesResponse copyWith(void Function(FindProjectOrderDatesResponse) updates) => super.copyWith((message) => updates(message as FindProjectOrderDatesResponse));
-  $pb.BuilderInfo get info_ => _i;
-  static FindProjectOrderDatesResponse create() => FindProjectOrderDatesResponse();
-  FindProjectOrderDatesResponse createEmptyInstance() => create();
-  static $pb.PbList<FindProjectOrderDatesResponse> createRepeated() => $pb.PbList<FindProjectOrderDatesResponse>();
-  static FindProjectOrderDatesResponse getDefault() => _defaultInstance ??= create()..freeze();
-  static FindProjectOrderDatesResponse _defaultInstance;
-
-  $core.List<Order> get orders => $_getList(0);
-}
-
 class Order extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('Order', package: const $pb.PackageName('server'))
     ..aOS(1, 'id')
-    ..aInt64(2, 'date')
-    ..aOS(3, 'status')
+    ..a<Project>(2, 'project', $pb.PbFieldType.OM, Project.getDefault, Project.create)
+    ..pc<Item>(3, 'items', $pb.PbFieldType.PM,Item.create)
+    ..aInt64(4, 'date')
+    ..aOS(5, 'status')
+    ..aOS(6, 'comments')
     ..hasRequiredFields = false
   ;
 
@@ -385,15 +367,141 @@ class Order extends $pb.GeneratedMessage {
   $core.bool hasId() => $_has(0);
   void clearId() => clearField(1);
 
-  Int64 get date => $_getI64(1);
-  set date(Int64 v) { $_setInt64(1, v); }
-  $core.bool hasDate() => $_has(1);
-  void clearDate() => clearField(2);
+  Project get project => $_getN(1);
+  set project(Project v) { setField(2, v); }
+  $core.bool hasProject() => $_has(1);
+  void clearProject() => clearField(2);
 
-  $core.String get status => $_getS(2, '');
-  set status($core.String v) { $_setString(2, v); }
-  $core.bool hasStatus() => $_has(2);
-  void clearStatus() => clearField(3);
+  $core.List<Item> get items => $_getList(2);
+
+  Int64 get date => $_getI64(3);
+  set date(Int64 v) { $_setInt64(3, v); }
+  $core.bool hasDate() => $_has(3);
+  void clearDate() => clearField(4);
+
+  $core.String get status => $_getS(4, '');
+  set status($core.String v) { $_setString(4, v); }
+  $core.bool hasStatus() => $_has(4);
+  void clearStatus() => clearField(5);
+
+  $core.String get comments => $_getS(5, '');
+  set comments($core.String v) { $_setString(5, v); }
+  $core.bool hasComments() => $_has(5);
+  void clearComments() => clearField(6);
+}
+
+class Project extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Project', package: const $pb.PackageName('server'))
+    ..aOS(1, 'id')
+    ..aOS(2, 'name')
+    ..hasRequiredFields = false
+  ;
+
+  Project() : super();
+  Project.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  Project.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  Project clone() => Project()..mergeFromMessage(this);
+  Project copyWith(void Function(Project) updates) => super.copyWith((message) => updates(message as Project));
+  $pb.BuilderInfo get info_ => _i;
+  static Project create() => Project();
+  Project createEmptyInstance() => create();
+  static $pb.PbList<Project> createRepeated() => $pb.PbList<Project>();
+  static Project getDefault() => _defaultInstance ??= create()..freeze();
+  static Project _defaultInstance;
+
+  $core.String get id => $_getS(0, '');
+  set id($core.String v) { $_setString(0, v); }
+  $core.bool hasId() => $_has(0);
+  void clearId() => clearField(1);
+
+  $core.String get name => $_getS(1, '');
+  set name($core.String v) { $_setString(1, v); }
+  $core.bool hasName() => $_has(1);
+  void clearName() => clearField(2);
+}
+
+class Item extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Item', package: const $pb.PackageName('server'))
+    ..a<Product>(1, 'product', $pb.PbFieldType.OM, Product.getDefault, Product.create)
+    ..a<$core.int>(2, 'quantityRequested', $pb.PbFieldType.OU3)
+    ..a<$core.int>(3, 'quantityReceived', $pb.PbFieldType.OU3)
+    ..a<$core.int>(4, 'quantityRemaining', $pb.PbFieldType.OU3)
+    ..aOS(5, 'itemStatus')
+    ..hasRequiredFields = false
+  ;
+
+  Item() : super();
+  Item.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  Item.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  Item clone() => Item()..mergeFromMessage(this);
+  Item copyWith(void Function(Item) updates) => super.copyWith((message) => updates(message as Item));
+  $pb.BuilderInfo get info_ => _i;
+  static Item create() => Item();
+  Item createEmptyInstance() => create();
+  static $pb.PbList<Item> createRepeated() => $pb.PbList<Item>();
+  static Item getDefault() => _defaultInstance ??= create()..freeze();
+  static Item _defaultInstance;
+
+  Product get product => $_getN(0);
+  set product(Product v) { setField(1, v); }
+  $core.bool hasProduct() => $_has(0);
+  void clearProduct() => clearField(1);
+
+  $core.int get quantityRequested => $_get(1, 0);
+  set quantityRequested($core.int v) { $_setUnsignedInt32(1, v); }
+  $core.bool hasQuantityRequested() => $_has(1);
+  void clearQuantityRequested() => clearField(2);
+
+  $core.int get quantityReceived => $_get(2, 0);
+  set quantityReceived($core.int v) { $_setUnsignedInt32(2, v); }
+  $core.bool hasQuantityReceived() => $_has(2);
+  void clearQuantityReceived() => clearField(3);
+
+  $core.int get quantityRemaining => $_get(3, 0);
+  set quantityRemaining($core.int v) { $_setUnsignedInt32(3, v); }
+  $core.bool hasQuantityRemaining() => $_has(3);
+  void clearQuantityRemaining() => clearField(4);
+
+  $core.String get itemStatus => $_getS(4, '');
+  set itemStatus($core.String v) { $_setString(4, v); }
+  $core.bool hasItemStatus() => $_has(4);
+  void clearItemStatus() => clearField(5);
+}
+
+class Product extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Product', package: const $pb.PackageName('server'))
+    ..aOS(1, 'id')
+    ..aOS(2, 'name')
+    ..aOS(3, 'uom')
+    ..hasRequiredFields = false
+  ;
+
+  Product() : super();
+  Product.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  Product.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  Product clone() => Product()..mergeFromMessage(this);
+  Product copyWith(void Function(Product) updates) => super.copyWith((message) => updates(message as Product));
+  $pb.BuilderInfo get info_ => _i;
+  static Product create() => Product();
+  Product createEmptyInstance() => create();
+  static $pb.PbList<Product> createRepeated() => $pb.PbList<Product>();
+  static Product getDefault() => _defaultInstance ??= create()..freeze();
+  static Product _defaultInstance;
+
+  $core.String get id => $_getS(0, '');
+  set id($core.String v) { $_setString(0, v); }
+  $core.bool hasId() => $_has(0);
+  void clearId() => clearField(1);
+
+  $core.String get name => $_getS(1, '');
+  set name($core.String v) { $_setString(1, v); }
+  $core.bool hasName() => $_has(1);
+  void clearName() => clearField(2);
+
+  $core.String get uom => $_getS(2, '');
+  set uom($core.String v) { $_setString(2, v); }
+  $core.bool hasUom() => $_has(2);
+  void clearUom() => clearField(3);
 }
 
 class FindOrderRequest extends $pb.GeneratedMessage {
@@ -422,9 +530,7 @@ class FindOrderRequest extends $pb.GeneratedMessage {
 
 class FindOrderResponse extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('FindOrderResponse', package: const $pb.PackageName('server'))
-    ..aInt64(1, 'date')
-    ..aOS(2, 'status')
-    ..pc<Item>(3, 'items', $pb.PbFieldType.PM,Item.create)
+    ..a<Order>(1, 'order', $pb.PbFieldType.OM, Order.getDefault, Order.create)
     ..hasRequiredFields = false
   ;
 
@@ -440,71 +546,118 @@ class FindOrderResponse extends $pb.GeneratedMessage {
   static FindOrderResponse getDefault() => _defaultInstance ??= create()..freeze();
   static FindOrderResponse _defaultInstance;
 
-  Int64 get date => $_getI64(0);
-  set date(Int64 v) { $_setInt64(0, v); }
-  $core.bool hasDate() => $_has(0);
-  void clearDate() => clearField(1);
-
-  $core.String get status => $_getS(1, '');
-  set status($core.String v) { $_setString(1, v); }
-  $core.bool hasStatus() => $_has(1);
-  void clearStatus() => clearField(2);
-
-  $core.List<Item> get items => $_getList(2);
+  Order get order => $_getN(0);
+  set order(Order v) { setField(1, v); }
+  $core.bool hasOrder() => $_has(0);
+  void clearOrder() => clearField(1);
 }
 
-class Item extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Item', package: const $pb.PackageName('server'))
-    ..aOS(1, 'productId')
-    ..aOS(2, 'name')
-    ..aOS(3, 'uom')
-    ..a<$core.int>(4, 'quantityRequested', $pb.PbFieldType.OU3)
-    ..a<$core.int>(5, 'quantityReceived', $pb.PbFieldType.OU3)
-    ..aOS(6, 'itemStatus')
+class OrderSummary extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('OrderSummary', package: const $pb.PackageName('server'))
+    ..aOS(1, 'id')
+    ..aInt64(2, 'date')
+    ..aOS(3, 'status')
     ..hasRequiredFields = false
   ;
 
-  Item() : super();
-  Item.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
-  Item.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
-  Item clone() => Item()..mergeFromMessage(this);
-  Item copyWith(void Function(Item) updates) => super.copyWith((message) => updates(message as Item));
+  OrderSummary() : super();
+  OrderSummary.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  OrderSummary.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  OrderSummary clone() => OrderSummary()..mergeFromMessage(this);
+  OrderSummary copyWith(void Function(OrderSummary) updates) => super.copyWith((message) => updates(message as OrderSummary));
   $pb.BuilderInfo get info_ => _i;
-  static Item create() => Item();
-  Item createEmptyInstance() => create();
-  static $pb.PbList<Item> createRepeated() => $pb.PbList<Item>();
-  static Item getDefault() => _defaultInstance ??= create()..freeze();
-  static Item _defaultInstance;
+  static OrderSummary create() => OrderSummary();
+  OrderSummary createEmptyInstance() => create();
+  static $pb.PbList<OrderSummary> createRepeated() => $pb.PbList<OrderSummary>();
+  static OrderSummary getDefault() => _defaultInstance ??= create()..freeze();
+  static OrderSummary _defaultInstance;
 
-  $core.String get productId => $_getS(0, '');
-  set productId($core.String v) { $_setString(0, v); }
-  $core.bool hasProductId() => $_has(0);
-  void clearProductId() => clearField(1);
+  $core.String get id => $_getS(0, '');
+  set id($core.String v) { $_setString(0, v); }
+  $core.bool hasId() => $_has(0);
+  void clearId() => clearField(1);
 
-  $core.String get name => $_getS(1, '');
-  set name($core.String v) { $_setString(1, v); }
-  $core.bool hasName() => $_has(1);
-  void clearName() => clearField(2);
+  Int64 get date => $_getI64(1);
+  set date(Int64 v) { $_setInt64(1, v); }
+  $core.bool hasDate() => $_has(1);
+  void clearDate() => clearField(2);
 
-  $core.String get uom => $_getS(2, '');
-  set uom($core.String v) { $_setString(2, v); }
-  $core.bool hasUom() => $_has(2);
-  void clearUom() => clearField(3);
+  $core.String get status => $_getS(2, '');
+  set status($core.String v) { $_setString(2, v); }
+  $core.bool hasStatus() => $_has(2);
+  void clearStatus() => clearField(3);
+}
 
-  $core.int get quantityRequested => $_get(3, 0);
-  set quantityRequested($core.int v) { $_setUnsignedInt32(3, v); }
-  $core.bool hasQuantityRequested() => $_has(3);
-  void clearQuantityRequested() => clearField(4);
+class FindProjectOrderDatesRequest extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('FindProjectOrderDatesRequest', package: const $pb.PackageName('server'))
+    ..aOS(1, 'projectId')
+    ..hasRequiredFields = false
+  ;
 
-  $core.int get quantityReceived => $_get(4, 0);
-  set quantityReceived($core.int v) { $_setUnsignedInt32(4, v); }
-  $core.bool hasQuantityReceived() => $_has(4);
-  void clearQuantityReceived() => clearField(5);
+  FindProjectOrderDatesRequest() : super();
+  FindProjectOrderDatesRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  FindProjectOrderDatesRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  FindProjectOrderDatesRequest clone() => FindProjectOrderDatesRequest()..mergeFromMessage(this);
+  FindProjectOrderDatesRequest copyWith(void Function(FindProjectOrderDatesRequest) updates) => super.copyWith((message) => updates(message as FindProjectOrderDatesRequest));
+  $pb.BuilderInfo get info_ => _i;
+  static FindProjectOrderDatesRequest create() => FindProjectOrderDatesRequest();
+  FindProjectOrderDatesRequest createEmptyInstance() => create();
+  static $pb.PbList<FindProjectOrderDatesRequest> createRepeated() => $pb.PbList<FindProjectOrderDatesRequest>();
+  static FindProjectOrderDatesRequest getDefault() => _defaultInstance ??= create()..freeze();
+  static FindProjectOrderDatesRequest _defaultInstance;
 
-  $core.String get itemStatus => $_getS(5, '');
-  set itemStatus($core.String v) { $_setString(5, v); }
-  $core.bool hasItemStatus() => $_has(5);
-  void clearItemStatus() => clearField(6);
+  $core.String get projectId => $_getS(0, '');
+  set projectId($core.String v) { $_setString(0, v); }
+  $core.bool hasProjectId() => $_has(0);
+  void clearProjectId() => clearField(1);
+}
+
+class FindProjectOrderDatesResponse extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('FindProjectOrderDatesResponse', package: const $pb.PackageName('server'))
+    ..pc<OrderSummary>(1, 'orders', $pb.PbFieldType.PM,OrderSummary.create)
+    ..hasRequiredFields = false
+  ;
+
+  FindProjectOrderDatesResponse() : super();
+  FindProjectOrderDatesResponse.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  FindProjectOrderDatesResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  FindProjectOrderDatesResponse clone() => FindProjectOrderDatesResponse()..mergeFromMessage(this);
+  FindProjectOrderDatesResponse copyWith(void Function(FindProjectOrderDatesResponse) updates) => super.copyWith((message) => updates(message as FindProjectOrderDatesResponse));
+  $pb.BuilderInfo get info_ => _i;
+  static FindProjectOrderDatesResponse create() => FindProjectOrderDatesResponse();
+  FindProjectOrderDatesResponse createEmptyInstance() => create();
+  static $pb.PbList<FindProjectOrderDatesResponse> createRepeated() => $pb.PbList<FindProjectOrderDatesResponse>();
+  static FindProjectOrderDatesResponse getDefault() => _defaultInstance ??= create()..freeze();
+  static FindProjectOrderDatesResponse _defaultInstance;
+
+  $core.List<OrderSummary> get orders => $_getList(0);
+}
+
+class Result extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Result', package: const $pb.PackageName('server'))
+    ..a<Product>(1, 'product', $pb.PbFieldType.OM, Product.getDefault, Product.create)
+    ..p<$core.int>(2, 'indexes', $pb.PbFieldType.P3)
+    ..hasRequiredFields = false
+  ;
+
+  Result() : super();
+  Result.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  Result.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  Result clone() => Result()..mergeFromMessage(this);
+  Result copyWith(void Function(Result) updates) => super.copyWith((message) => updates(message as Result));
+  $pb.BuilderInfo get info_ => _i;
+  static Result create() => Result();
+  Result createEmptyInstance() => create();
+  static $pb.PbList<Result> createRepeated() => $pb.PbList<Result>();
+  static Result getDefault() => _defaultInstance ??= create()..freeze();
+  static Result _defaultInstance;
+
+  Product get product => $_getN(0);
+  set product(Product v) { setField(1, v); }
+  $core.bool hasProduct() => $_has(0);
+  void clearProduct() => clearField(1);
+
+  $core.List<$core.int> get indexes => $_getList(1);
 }
 
 class ProductSearchRequest extends $pb.GeneratedMessage {
@@ -552,72 +705,138 @@ class ProductSearchResponse extends $pb.GeneratedMessage {
   $core.List<Result> get results => $_getList(0);
 }
 
-class Result extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Result', package: const $pb.PackageName('server'))
-    ..aOS(1, 'productUuid')
-    ..aOS(2, 'category')
-    ..aOS(3, 'name')
-    ..aOS(4, 'uom')
-    ..pc<Index>(5, 'indexes', $pb.PbFieldType.PM,Index.create)
+class CreateProjectRequest extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('CreateProjectRequest', package: const $pb.PackageName('server'))
+    ..aOS(1, 'id')
+    ..aOS(2, 'name')
     ..hasRequiredFields = false
   ;
 
-  Result() : super();
-  Result.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
-  Result.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
-  Result clone() => Result()..mergeFromMessage(this);
-  Result copyWith(void Function(Result) updates) => super.copyWith((message) => updates(message as Result));
+  CreateProjectRequest() : super();
+  CreateProjectRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  CreateProjectRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  CreateProjectRequest clone() => CreateProjectRequest()..mergeFromMessage(this);
+  CreateProjectRequest copyWith(void Function(CreateProjectRequest) updates) => super.copyWith((message) => updates(message as CreateProjectRequest));
   $pb.BuilderInfo get info_ => _i;
-  static Result create() => Result();
-  Result createEmptyInstance() => create();
-  static $pb.PbList<Result> createRepeated() => $pb.PbList<Result>();
-  static Result getDefault() => _defaultInstance ??= create()..freeze();
-  static Result _defaultInstance;
+  static CreateProjectRequest create() => CreateProjectRequest();
+  CreateProjectRequest createEmptyInstance() => create();
+  static $pb.PbList<CreateProjectRequest> createRepeated() => $pb.PbList<CreateProjectRequest>();
+  static CreateProjectRequest getDefault() => _defaultInstance ??= create()..freeze();
+  static CreateProjectRequest _defaultInstance;
 
-  $core.String get productUuid => $_getS(0, '');
-  set productUuid($core.String v) { $_setString(0, v); }
-  $core.bool hasProductUuid() => $_has(0);
-  void clearProductUuid() => clearField(1);
+  $core.String get id => $_getS(0, '');
+  set id($core.String v) { $_setString(0, v); }
+  $core.bool hasId() => $_has(0);
+  void clearId() => clearField(1);
 
-  $core.String get category => $_getS(1, '');
-  set category($core.String v) { $_setString(1, v); }
-  $core.bool hasCategory() => $_has(1);
-  void clearCategory() => clearField(2);
-
-  $core.String get name => $_getS(2, '');
-  set name($core.String v) { $_setString(2, v); }
-  $core.bool hasName() => $_has(2);
-  void clearName() => clearField(3);
-
-  $core.String get uom => $_getS(3, '');
-  set uom($core.String v) { $_setString(3, v); }
-  $core.bool hasUom() => $_has(3);
-  void clearUom() => clearField(4);
-
-  $core.List<Index> get indexes => $_getList(4);
+  $core.String get name => $_getS(1, '');
+  set name($core.String v) { $_setString(1, v); }
+  $core.bool hasName() => $_has(1);
+  void clearName() => clearField(2);
 }
 
-class Index extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Index', package: const $pb.PackageName('server'))
-    ..a<$core.int>(1, 'index', $pb.PbFieldType.O3)
+class CreateProjectResponse extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('CreateProjectResponse', package: const $pb.PackageName('server'))
     ..hasRequiredFields = false
   ;
 
-  Index() : super();
-  Index.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
-  Index.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
-  Index clone() => Index()..mergeFromMessage(this);
-  Index copyWith(void Function(Index) updates) => super.copyWith((message) => updates(message as Index));
+  CreateProjectResponse() : super();
+  CreateProjectResponse.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  CreateProjectResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  CreateProjectResponse clone() => CreateProjectResponse()..mergeFromMessage(this);
+  CreateProjectResponse copyWith(void Function(CreateProjectResponse) updates) => super.copyWith((message) => updates(message as CreateProjectResponse));
   $pb.BuilderInfo get info_ => _i;
-  static Index create() => Index();
-  Index createEmptyInstance() => create();
-  static $pb.PbList<Index> createRepeated() => $pb.PbList<Index>();
-  static Index getDefault() => _defaultInstance ??= create()..freeze();
-  static Index _defaultInstance;
+  static CreateProjectResponse create() => CreateProjectResponse();
+  CreateProjectResponse createEmptyInstance() => create();
+  static $pb.PbList<CreateProjectResponse> createRepeated() => $pb.PbList<CreateProjectResponse>();
+  static CreateProjectResponse getDefault() => _defaultInstance ??= create()..freeze();
+  static CreateProjectResponse _defaultInstance;
+}
 
-  $core.int get index => $_get(0, 0);
-  set index($core.int v) { $_setSignedInt32(0, v); }
-  $core.bool hasIndex() => $_has(0);
-  void clearIndex() => clearField(1);
+class CloseProjectRequest extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('CloseProjectRequest', package: const $pb.PackageName('server'))
+    ..aOS(1, 'id')
+    ..hasRequiredFields = false
+  ;
+
+  CloseProjectRequest() : super();
+  CloseProjectRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  CloseProjectRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  CloseProjectRequest clone() => CloseProjectRequest()..mergeFromMessage(this);
+  CloseProjectRequest copyWith(void Function(CloseProjectRequest) updates) => super.copyWith((message) => updates(message as CloseProjectRequest));
+  $pb.BuilderInfo get info_ => _i;
+  static CloseProjectRequest create() => CloseProjectRequest();
+  CloseProjectRequest createEmptyInstance() => create();
+  static $pb.PbList<CloseProjectRequest> createRepeated() => $pb.PbList<CloseProjectRequest>();
+  static CloseProjectRequest getDefault() => _defaultInstance ??= create()..freeze();
+  static CloseProjectRequest _defaultInstance;
+
+  $core.String get id => $_getS(0, '');
+  set id($core.String v) { $_setString(0, v); }
+  $core.bool hasId() => $_has(0);
+  void clearId() => clearField(1);
+}
+
+class CloseProjectResponse extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('CloseProjectResponse', package: const $pb.PackageName('server'))
+    ..hasRequiredFields = false
+  ;
+
+  CloseProjectResponse() : super();
+  CloseProjectResponse.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  CloseProjectResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  CloseProjectResponse clone() => CloseProjectResponse()..mergeFromMessage(this);
+  CloseProjectResponse copyWith(void Function(CloseProjectResponse) updates) => super.copyWith((message) => updates(message as CloseProjectResponse));
+  $pb.BuilderInfo get info_ => _i;
+  static CloseProjectResponse create() => CloseProjectResponse();
+  CloseProjectResponse createEmptyInstance() => create();
+  static $pb.PbList<CloseProjectResponse> createRepeated() => $pb.PbList<CloseProjectResponse>();
+  static CloseProjectResponse getDefault() => _defaultInstance ??= create()..freeze();
+  static CloseProjectResponse _defaultInstance;
+}
+
+class FindProjectsRequest extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('FindProjectsRequest', package: const $pb.PackageName('server'))
+    ..aOS(1, 'foremanId')
+    ..hasRequiredFields = false
+  ;
+
+  FindProjectsRequest() : super();
+  FindProjectsRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  FindProjectsRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  FindProjectsRequest clone() => FindProjectsRequest()..mergeFromMessage(this);
+  FindProjectsRequest copyWith(void Function(FindProjectsRequest) updates) => super.copyWith((message) => updates(message as FindProjectsRequest));
+  $pb.BuilderInfo get info_ => _i;
+  static FindProjectsRequest create() => FindProjectsRequest();
+  FindProjectsRequest createEmptyInstance() => create();
+  static $pb.PbList<FindProjectsRequest> createRepeated() => $pb.PbList<FindProjectsRequest>();
+  static FindProjectsRequest getDefault() => _defaultInstance ??= create()..freeze();
+  static FindProjectsRequest _defaultInstance;
+
+  $core.String get foremanId => $_getS(0, '');
+  set foremanId($core.String v) { $_setString(0, v); }
+  $core.bool hasForemanId() => $_has(0);
+  void clearForemanId() => clearField(1);
+}
+
+class FindProjectsResponse extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('FindProjectsResponse', package: const $pb.PackageName('server'))
+    ..pc<Project>(1, 'projects', $pb.PbFieldType.PM,Project.create)
+    ..hasRequiredFields = false
+  ;
+
+  FindProjectsResponse() : super();
+  FindProjectsResponse.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  FindProjectsResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  FindProjectsResponse clone() => FindProjectsResponse()..mergeFromMessage(this);
+  FindProjectsResponse copyWith(void Function(FindProjectsResponse) updates) => super.copyWith((message) => updates(message as FindProjectsResponse));
+  $pb.BuilderInfo get info_ => _i;
+  static FindProjectsResponse create() => FindProjectsResponse();
+  FindProjectsResponse createEmptyInstance() => create();
+  static $pb.PbList<FindProjectsResponse> createRepeated() => $pb.PbList<FindProjectsResponse>();
+  static FindProjectsResponse getDefault() => _defaultInstance ??= create()..freeze();
+  static FindProjectsResponse _defaultInstance;
+
+  $core.List<Project> get projects => $_getList(0);
 }
 

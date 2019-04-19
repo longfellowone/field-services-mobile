@@ -9,6 +9,9 @@ const CreateOrderRequest$json = const {
   '2': const [
     const {'1': 'id', '3': 1, '4': 1, '5': 9, '10': 'id'},
     const {'1': 'project_id', '3': 2, '4': 1, '5': 9, '10': 'projectId'},
+    const {'1': 'name', '3': 3, '4': 1, '5': 9, '10': 'name'},
+    const {'1': 'foreman', '3': 4, '4': 1, '5': 9, '10': 'foreman'},
+    const {'1': 'email', '3': 5, '4': 1, '5': 9, '10': 'email'},
   ],
 };
 
@@ -59,6 +62,7 @@ const SendOrderRequest$json = const {
   '1': 'SendOrderRequest',
   '2': const [
     const {'1': 'id', '3': 1, '4': 1, '5': 9, '10': 'id'},
+    const {'1': 'comments', '3': 2, '4': 1, '5': 9, '10': 'comments'},
   ],
 };
 
@@ -79,26 +83,43 @@ const ReceiveOrderItemResponse$json = const {
   '1': 'ReceiveOrderItemResponse',
 };
 
-const FindProjectOrderDatesRequest$json = const {
-  '1': 'FindProjectOrderDatesRequest',
-  '2': const [
-    const {'1': 'project_id', '3': 1, '4': 1, '5': 9, '10': 'projectId'},
-  ],
-};
-
-const FindProjectOrderDatesResponse$json = const {
-  '1': 'FindProjectOrderDatesResponse',
-  '2': const [
-    const {'1': 'orders', '3': 1, '4': 3, '5': 11, '6': '.server.Order', '10': 'orders'},
-  ],
-};
-
 const Order$json = const {
   '1': 'Order',
   '2': const [
     const {'1': 'id', '3': 1, '4': 1, '5': 9, '10': 'id'},
-    const {'1': 'date', '3': 2, '4': 1, '5': 3, '10': 'date'},
-    const {'1': 'status', '3': 3, '4': 1, '5': 9, '10': 'status'},
+    const {'1': 'project', '3': 2, '4': 1, '5': 11, '6': '.server.Project', '10': 'project'},
+    const {'1': 'items', '3': 3, '4': 3, '5': 11, '6': '.server.Item', '10': 'items'},
+    const {'1': 'date', '3': 4, '4': 1, '5': 3, '10': 'date'},
+    const {'1': 'status', '3': 5, '4': 1, '5': 9, '10': 'status'},
+    const {'1': 'comments', '3': 6, '4': 1, '5': 9, '10': 'comments'},
+  ],
+};
+
+const Project$json = const {
+  '1': 'Project',
+  '2': const [
+    const {'1': 'id', '3': 1, '4': 1, '5': 9, '10': 'id'},
+    const {'1': 'name', '3': 2, '4': 1, '5': 9, '10': 'name'},
+  ],
+};
+
+const Item$json = const {
+  '1': 'Item',
+  '2': const [
+    const {'1': 'product', '3': 1, '4': 1, '5': 11, '6': '.server.Product', '10': 'product'},
+    const {'1': 'quantity_requested', '3': 2, '4': 1, '5': 13, '10': 'quantityRequested'},
+    const {'1': 'quantity_received', '3': 3, '4': 1, '5': 13, '10': 'quantityReceived'},
+    const {'1': 'quantity_remaining', '3': 4, '4': 1, '5': 13, '10': 'quantityRemaining'},
+    const {'1': 'item_status', '3': 5, '4': 1, '5': 9, '10': 'itemStatus'},
+  ],
+};
+
+const Product$json = const {
+  '1': 'Product',
+  '2': const [
+    const {'1': 'id', '3': 1, '4': 1, '5': 9, '10': 'id'},
+    const {'1': 'name', '3': 2, '4': 1, '5': 9, '10': 'name'},
+    const {'1': 'uom', '3': 3, '4': 1, '5': 9, '10': 'uom'},
   ],
 };
 
@@ -112,21 +133,38 @@ const FindOrderRequest$json = const {
 const FindOrderResponse$json = const {
   '1': 'FindOrderResponse',
   '2': const [
-    const {'1': 'date', '3': 1, '4': 1, '5': 3, '10': 'date'},
-    const {'1': 'status', '3': 2, '4': 1, '5': 9, '10': 'status'},
-    const {'1': 'items', '3': 3, '4': 3, '5': 11, '6': '.server.Item', '10': 'items'},
+    const {'1': 'order', '3': 1, '4': 1, '5': 11, '6': '.server.Order', '10': 'order'},
   ],
 };
 
-const Item$json = const {
-  '1': 'Item',
+const OrderSummary$json = const {
+  '1': 'OrderSummary',
   '2': const [
-    const {'1': 'product_id', '3': 1, '4': 1, '5': 9, '10': 'productId'},
-    const {'1': 'name', '3': 2, '4': 1, '5': 9, '10': 'name'},
-    const {'1': 'uom', '3': 3, '4': 1, '5': 9, '10': 'uom'},
-    const {'1': 'quantity_requested', '3': 4, '4': 1, '5': 13, '10': 'quantityRequested'},
-    const {'1': 'quantity_received', '3': 5, '4': 1, '5': 13, '10': 'quantityReceived'},
-    const {'1': 'item_status', '3': 6, '4': 1, '5': 9, '10': 'itemStatus'},
+    const {'1': 'id', '3': 1, '4': 1, '5': 9, '10': 'id'},
+    const {'1': 'date', '3': 2, '4': 1, '5': 3, '10': 'date'},
+    const {'1': 'status', '3': 3, '4': 1, '5': 9, '10': 'status'},
+  ],
+};
+
+const FindProjectOrderDatesRequest$json = const {
+  '1': 'FindProjectOrderDatesRequest',
+  '2': const [
+    const {'1': 'project_id', '3': 1, '4': 1, '5': 9, '10': 'projectId'},
+  ],
+};
+
+const FindProjectOrderDatesResponse$json = const {
+  '1': 'FindProjectOrderDatesResponse',
+  '2': const [
+    const {'1': 'orders', '3': 1, '4': 3, '5': 11, '6': '.server.OrderSummary', '10': 'orders'},
+  ],
+};
+
+const Result$json = const {
+  '1': 'Result',
+  '2': const [
+    const {'1': 'product', '3': 1, '4': 1, '5': 11, '6': '.server.Product', '10': 'product'},
+    const {'1': 'indexes', '3': 2, '4': 3, '5': 5, '10': 'indexes'},
   ],
 };
 
@@ -144,21 +182,40 @@ const ProductSearchResponse$json = const {
   ],
 };
 
-const Result$json = const {
-  '1': 'Result',
+const CreateProjectRequest$json = const {
+  '1': 'CreateProjectRequest',
   '2': const [
-    const {'1': 'product_uuid', '3': 1, '4': 1, '5': 9, '10': 'productUuid'},
-    const {'1': 'category', '3': 2, '4': 1, '5': 9, '10': 'category'},
-    const {'1': 'name', '3': 3, '4': 1, '5': 9, '10': 'name'},
-    const {'1': 'uom', '3': 4, '4': 1, '5': 9, '10': 'uom'},
-    const {'1': 'indexes', '3': 5, '4': 3, '5': 11, '6': '.server.Index', '10': 'indexes'},
+    const {'1': 'id', '3': 1, '4': 1, '5': 9, '10': 'id'},
+    const {'1': 'name', '3': 2, '4': 1, '5': 9, '10': 'name'},
   ],
 };
 
-const Index$json = const {
-  '1': 'Index',
+const CreateProjectResponse$json = const {
+  '1': 'CreateProjectResponse',
+};
+
+const CloseProjectRequest$json = const {
+  '1': 'CloseProjectRequest',
   '2': const [
-    const {'1': 'index', '3': 1, '4': 1, '5': 5, '10': 'index'},
+    const {'1': 'id', '3': 1, '4': 1, '5': 9, '10': 'id'},
+  ],
+};
+
+const CloseProjectResponse$json = const {
+  '1': 'CloseProjectResponse',
+};
+
+const FindProjectsRequest$json = const {
+  '1': 'FindProjectsRequest',
+  '2': const [
+    const {'1': 'foreman_id', '3': 1, '4': 1, '5': 9, '10': 'foremanId'},
+  ],
+};
+
+const FindProjectsResponse$json = const {
+  '1': 'FindProjectsResponse',
+  '2': const [
+    const {'1': 'projects', '3': 1, '4': 3, '5': 11, '6': '.server.Project', '10': 'projects'},
   ],
 };
 

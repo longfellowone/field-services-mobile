@@ -66,6 +66,24 @@ class SupplyClient extends $grpc.Client {
           (ProductSearchRequest value) => value.writeToBuffer(),
           ($core.List<$core.int> value) =>
               ProductSearchResponse.fromBuffer(value));
+  static final _$createProject =
+      $grpc.ClientMethod<CreateProjectRequest, CreateProjectResponse>(
+          '/server.Supply/CreateProject',
+          (CreateProjectRequest value) => value.writeToBuffer(),
+          ($core.List<$core.int> value) =>
+              CreateProjectResponse.fromBuffer(value));
+  static final _$closeProject =
+      $grpc.ClientMethod<CloseProjectRequest, CloseProjectResponse>(
+          '/server.Supply/CloseProject',
+          (CloseProjectRequest value) => value.writeToBuffer(),
+          ($core.List<$core.int> value) =>
+              CloseProjectResponse.fromBuffer(value));
+  static final _$findProjects =
+      $grpc.ClientMethod<FindProjectsRequest, FindProjectsResponse>(
+          '/server.Supply/FindProjects',
+          (FindProjectsRequest value) => value.writeToBuffer(),
+          ($core.List<$core.int> value) =>
+              FindProjectsResponse.fromBuffer(value));
 
   SupplyClient($grpc.ClientChannel channel, {$grpc.CallOptions options})
       : super(channel, options: options);
@@ -146,6 +164,33 @@ class SupplyClient extends $grpc.Client {
         options: options);
     return $grpc.ResponseFuture(call);
   }
+
+  $grpc.ResponseFuture<CreateProjectResponse> createProject(
+      CreateProjectRequest request,
+      {$grpc.CallOptions options}) {
+    final call = $createCall(
+        _$createProject, $async.Stream.fromIterable([request]),
+        options: options);
+    return $grpc.ResponseFuture(call);
+  }
+
+  $grpc.ResponseFuture<CloseProjectResponse> closeProject(
+      CloseProjectRequest request,
+      {$grpc.CallOptions options}) {
+    final call = $createCall(
+        _$closeProject, $async.Stream.fromIterable([request]),
+        options: options);
+    return $grpc.ResponseFuture(call);
+  }
+
+  $grpc.ResponseFuture<FindProjectsResponse> findProjects(
+      FindProjectsRequest request,
+      {$grpc.CallOptions options}) {
+    final call = $createCall(
+        _$findProjects, $async.Stream.fromIterable([request]),
+        options: options);
+    return $grpc.ResponseFuture(call);
+  }
 }
 
 abstract class SupplyServiceBase extends $grpc.Service {
@@ -223,6 +268,27 @@ abstract class SupplyServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => ProductSearchRequest.fromBuffer(value),
         (ProductSearchResponse value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<CreateProjectRequest, CreateProjectResponse>(
+        'CreateProject',
+        createProject_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => CreateProjectRequest.fromBuffer(value),
+        (CreateProjectResponse value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<CloseProjectRequest, CloseProjectResponse>(
+        'CloseProject',
+        closeProject_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => CloseProjectRequest.fromBuffer(value),
+        (CloseProjectResponse value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<FindProjectsRequest, FindProjectsResponse>(
+        'FindProjects',
+        findProjects_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => FindProjectsRequest.fromBuffer(value),
+        (FindProjectsResponse value) => value.writeToBuffer()));
   }
 
   $async.Future<CreateOrderResponse> createOrder_Pre(
@@ -270,6 +336,21 @@ abstract class SupplyServiceBase extends $grpc.Service {
     return productSearch(call, await request);
   }
 
+  $async.Future<CreateProjectResponse> createProject_Pre(
+      $grpc.ServiceCall call, $async.Future request) async {
+    return createProject(call, await request);
+  }
+
+  $async.Future<CloseProjectResponse> closeProject_Pre(
+      $grpc.ServiceCall call, $async.Future request) async {
+    return closeProject(call, await request);
+  }
+
+  $async.Future<FindProjectsResponse> findProjects_Pre(
+      $grpc.ServiceCall call, $async.Future request) async {
+    return findProjects(call, await request);
+  }
+
   $async.Future<CreateOrderResponse> createOrder(
       $grpc.ServiceCall call, CreateOrderRequest request);
   $async.Future<SendOrderResponse> sendOrder(
@@ -288,15 +369,10 @@ abstract class SupplyServiceBase extends $grpc.Service {
       $grpc.ServiceCall call, FindProjectOrderDatesRequest request);
   $async.Future<ProductSearchResponse> productSearch(
       $grpc.ServiceCall call, ProductSearchRequest request);
-}
-
-class PurchasingClient extends $grpc.Client {
-  PurchasingClient($grpc.ClientChannel channel, {$grpc.CallOptions options})
-      : super(channel, options: options);
-}
-
-abstract class PurchasingServiceBase extends $grpc.Service {
-  $core.String get $name => 'server.Purchasing';
-
-  PurchasingServiceBase() {}
+  $async.Future<CreateProjectResponse> createProject(
+      $grpc.ServiceCall call, CreateProjectRequest request);
+  $async.Future<CloseProjectResponse> closeProject(
+      $grpc.ServiceCall call, CloseProjectRequest request);
+  $async.Future<FindProjectsResponse> findProjects(
+      $grpc.ServiceCall call, FindProjectsRequest request);
 }
