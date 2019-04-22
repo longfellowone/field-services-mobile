@@ -89,7 +89,7 @@ const Order$json = const {
     const {'1': 'id', '3': 1, '4': 1, '5': 9, '10': 'id'},
     const {'1': 'project', '3': 2, '4': 1, '5': 11, '6': '.server.Project', '10': 'project'},
     const {'1': 'items', '3': 3, '4': 3, '5': 11, '6': '.server.Item', '10': 'items'},
-    const {'1': 'date', '3': 4, '4': 1, '5': 3, '10': 'date'},
+    const {'1': 'date', '3': 4, '4': 1, '5': 5, '10': 'date'},
     const {'1': 'status', '3': 5, '4': 1, '5': 9, '10': 'status'},
     const {'1': 'comments', '3': 6, '4': 1, '5': 9, '10': 'comments'},
   ],
@@ -141,7 +141,7 @@ const OrderSummary$json = const {
   '1': 'OrderSummary',
   '2': const [
     const {'1': 'id', '3': 1, '4': 1, '5': 9, '10': 'id'},
-    const {'1': 'date', '3': 2, '4': 1, '5': 3, '10': 'date'},
+    const {'1': 'date', '3': 2, '4': 1, '5': 5, '10': 'date'},
     const {'1': 'status', '3': 3, '4': 1, '5': 9, '10': 'status'},
   ],
 };

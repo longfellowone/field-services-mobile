@@ -6,7 +6,6 @@
 
 import 'dart:core' as $core show bool, Deprecated, double, int, List, Map, override, String;
 
-import 'package:fixnum/fixnum.dart';
 import 'package:protobuf/protobuf.dart' as $pb;
 
 class CreateOrderRequest extends $pb.GeneratedMessage {
@@ -344,7 +343,7 @@ class Order extends $pb.GeneratedMessage {
     ..aOS(1, 'id')
     ..a<Project>(2, 'project', $pb.PbFieldType.OM, Project.getDefault, Project.create)
     ..pc<Item>(3, 'items', $pb.PbFieldType.PM,Item.create)
-    ..aInt64(4, 'date')
+    ..a<$core.int>(4, 'date', $pb.PbFieldType.O3)
     ..aOS(5, 'status')
     ..aOS(6, 'comments')
     ..hasRequiredFields = false
@@ -374,8 +373,8 @@ class Order extends $pb.GeneratedMessage {
 
   $core.List<Item> get items => $_getList(2);
 
-  Int64 get date => $_getI64(3);
-  set date(Int64 v) { $_setInt64(3, v); }
+  $core.int get date => $_get(3, 0);
+  set date($core.int v) { $_setSignedInt32(3, v); }
   $core.bool hasDate() => $_has(3);
   void clearDate() => clearField(4);
 
@@ -555,7 +554,7 @@ class FindOrderResponse extends $pb.GeneratedMessage {
 class OrderSummary extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('OrderSummary', package: const $pb.PackageName('server'))
     ..aOS(1, 'id')
-    ..aInt64(2, 'date')
+    ..a<$core.int>(2, 'date', $pb.PbFieldType.O3)
     ..aOS(3, 'status')
     ..hasRequiredFields = false
   ;
@@ -577,8 +576,8 @@ class OrderSummary extends $pb.GeneratedMessage {
   $core.bool hasId() => $_has(0);
   void clearId() => clearField(1);
 
-  Int64 get date => $_getI64(1);
-  set date(Int64 v) { $_setInt64(1, v); }
+  $core.int get date => $_get(1, 0);
+  set date($core.int v) { $_setSignedInt32(1, v); }
   $core.bool hasDate() => $_has(1);
   void clearDate() => clearField(2);
 

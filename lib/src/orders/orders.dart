@@ -68,9 +68,10 @@ class OrderSummaryListItem extends StatelessWidget {
       onTap: () => Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (BuildContext context) => OrderList(
+            builder: (BuildContext context) => OrderWidget(
                   api: api,
                   id: order.id,
+                  date: order.date,
                 ),
           )),
     );

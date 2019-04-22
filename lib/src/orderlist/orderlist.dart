@@ -4,30 +4,31 @@ import 'package:myapp/src/bloc/bloc_provider.dart';
 import 'package:myapp/src/generated/supply.pb.dart';
 import 'package:myapp/src/orderlist/orderlist_bloc.dart';
 
-class OrderList extends StatelessWidget {
-  OrderList({this.api, this.id});
+class OrderWidget extends StatelessWidget {
+  OrderWidget({this.api, this.id, this.date});
 
   final SupplyApi api;
   final String id;
+  final int date;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("my order"),
+        title: Text(date.toString()),
       ),
       body: BlocProvider<OrderListBloc>(
         bloc: OrderListBloc(
           api: api,
           id: id,
         ),
-        child: OrderMaterialList(),
+        child: _OrderList(),
       ),
     );
   }
 }
 
-class OrderMaterialList extends StatelessWidget {
+class _OrderList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     OrderListBloc _ordersListBloc = BlocProvider.of<OrderListBloc>(context);
@@ -36,7 +37,6 @@ class OrderMaterialList extends StatelessWidget {
       stream: _ordersListBloc.order,
       builder: (BuildContext context, AsyncSnapshot<Order> snapshot) {
         if (snapshot.hasData) {
-          print(snapshot.data);
           return Text(snapshot.data.id);
         }
         return Center(child: CircularProgressIndicator());
