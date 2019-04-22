@@ -6,28 +6,32 @@ import 'package:myapp/src/generated/supply.pbgrpc.dart';
 import 'package:myapp/src/orderlist/orderlist.dart';
 import 'package:myapp/src/orders/orders_bloc.dart';
 
-class Orders extends StatelessWidget {
-  Orders({this.api});
+class OrderSummaryWidget extends StatelessWidget {
+  OrderSummaryWidget({this.api});
 
-  static const String routeName = '/orders';
+  static const String routeName = '/';
   final SupplyApi api;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Orders'),
-      ),
-      body: BlocProvider(
-        bloc: OrdersBloc(api: api),
-        child: OrderSummaryList(api: api),
+    return BlocProvider<OrdersBloc>(
+      bloc: OrdersBloc(api: api),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Orders'),
+        ),
+        body: _OrderSummaryBuilder(api: api),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.create),
+          onPressed: () {},
+        ),
       ),
     );
   }
 }
 
-class OrderSummaryList extends StatelessWidget {
-  OrderSummaryList({this.api});
+class _OrderSummaryBuilder extends StatelessWidget {
+  _OrderSummaryBuilder({this.api});
 
   final SupplyApi api;
 
@@ -39,10 +43,11 @@ class OrderSummaryList extends StatelessWidget {
       stream: _ordersBloc.orderSummaries,
       builder: (BuildContext context, AsyncSnapshot<List<OrderSummary>> snapshot) {
         if (snapshot.hasData) {
-          return ListView.builder(
+          return ListView.separated(
+            separatorBuilder: (BuildContext context, int index) => Divider(height: 0),
             itemCount: snapshot.data.length,
             itemBuilder: (BuildContext context, int index) {
-              return OrderSummaryListItem(
+              return _OrderSummaryListItem(
                 api: api,
                 order: snapshot.data[index],
               );
@@ -55,8 +60,8 @@ class OrderSummaryList extends StatelessWidget {
   }
 }
 
-class OrderSummaryListItem extends StatelessWidget {
-  OrderSummaryListItem({this.api, this.order});
+class _OrderSummaryListItem extends StatelessWidget {
+  _OrderSummaryListItem({this.api, this.order});
 
   final SupplyApi api;
   final OrderSummary order;
@@ -65,28 +70,17 @@ class OrderSummaryListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(order.id),
+      trailing: Icon(Icons.keyboard_arrow_right),
       onTap: () => Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (BuildContext context) => OrderWidget(
+            builder: (BuildContext context) => OrderListWidget(
                   api: api,
                   id: order.id,
                   date: order.date,
+                  status: order.status,
                 ),
           )),
     );
   }
 }
-
-//Column(
-//children: <Widget>[
-//Text(snapshot.data[0].id),
-//RaisedButton(
-//child: Text('back to home'),
-//onPressed: () {
-//Navigator.pushNamedAndRemoveUntil(context, "/", (route) => false);
-////                      Navigator.popUntil(context, ModalRoute.withName("/"));
-//},
-//)
-//],
-//);

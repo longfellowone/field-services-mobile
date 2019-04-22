@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/src/api/supply.dart';
-import 'package:myapp/src/home/home.dart';
 import 'package:myapp/src/orders/orders.dart';
 import 'package:myapp/src/projects/projects.dart';
 
@@ -13,11 +12,11 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "my app title",
-      initialRoute: Home.routeName,
+      initialRoute: OrderSummaryWidget.routeName,
       routes: <String, WidgetBuilder>{
-        Home.routeName: (BuildContext context) => Home(),
+//        Home.routeName: (BuildContext context) => Home(),
         Projects.routeName: (BuildContext context) => Projects(),
-        Orders.routeName: (BuildContext context) => Orders(api: api)
+        OrderSummaryWidget.routeName: (BuildContext context) => OrderSummaryWidget(api: api)
       },
     );
   }
