@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class Projects extends StatelessWidget {
+class ProjectsWidget extends StatelessWidget {
   static const String routeName = '/projects';
 
   @override

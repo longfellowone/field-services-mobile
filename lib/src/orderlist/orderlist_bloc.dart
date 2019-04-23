@@ -3,13 +3,13 @@ import 'package:myapp/src/bloc/bloc_provider.dart';
 import 'package:myapp/src/generated/supply.pb.dart';
 
 class OrderListBloc extends BlocBase {
-  OrderListBloc({this.api, this.id});
+  OrderListBloc({this.service, this.id});
 
-  final SupplyApi api;
+  final SupplyService service;
   final String id;
 
-  Stream<Order> get order async* {
-    yield await api.findOrder(id: id);
+  Stream<FindOrderResponse> get order async* {
+    yield await service.findOrder(id: id);
   }
 
   @override

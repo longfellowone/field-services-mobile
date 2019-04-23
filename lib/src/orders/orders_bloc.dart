@@ -3,12 +3,12 @@ import 'package:myapp/src/bloc/bloc_provider.dart';
 import 'package:myapp/src/generated/supply.pb.dart';
 
 class OrdersBloc extends BlocBase {
-  OrdersBloc({this.api});
+  OrdersBloc({this.service});
 
-  final SupplyApi api;
+  final SupplyService service;
 
-  Stream<List<OrderSummary>> get orderSummaries async* {
-    yield await api.findProjectOrderDates(projectId: 'cf510766-faf7-415e-a067-0c5ae5cb2ae8');
+  Stream<FindProjectOrderDatesResponse> get orderSummaries async* {
+    yield await service.findProjectOrderDates(projectId: 'cf510766-faf7-415e-a067-0c5ae5cb2ae8');
   }
 
   @override

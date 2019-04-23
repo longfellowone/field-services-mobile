@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:myapp/src/api/api_provider.dart';
 import 'package:myapp/src/api/supply.dart';
 import 'package:myapp/src/bloc/bloc_provider.dart';
 import 'package:myapp/src/generated/supply.pb.dart';
@@ -7,22 +9,21 @@ import 'package:myapp/src/orderlist/orderlist.dart';
 import 'package:myapp/src/orders/orders_bloc.dart';
 
 class OrderSummaryWidget extends StatelessWidget {
-  OrderSummaryWidget({this.api});
-
   static const String routeName = '/';
-  final SupplyApi api;
 
   @override
   Widget build(BuildContext context) {
+    SupplyService service = ServiceProvider.of<SupplyService>(context);
+
     return BlocProvider<OrdersBloc>(
-      bloc: OrdersBloc(api: api),
+      bloc: OrdersBloc(service: service),
       child: Scaffold(
         appBar: AppBar(
           title: Text('Orders'),
         ),
-        body: _OrderSummaryBuilder(api: api),
+        body: _OrderSummaryBuilder(),
         floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.create),
+          child: Icon(Icons.add),
           onPressed: () {},
         ),
       ),
@@ -31,55 +32,47 @@ class OrderSummaryWidget extends StatelessWidget {
 }
 
 class _OrderSummaryBuilder extends StatelessWidget {
-  _OrderSummaryBuilder({this.api});
-
-  final SupplyApi api;
-
   @override
   Widget build(BuildContext context) {
     OrdersBloc _ordersBloc = BlocProvider.of<OrdersBloc>(context);
 
     return StreamBuilder(
       stream: _ordersBloc.orderSummaries,
-      builder: (BuildContext context, AsyncSnapshot<List<OrderSummary>> snapshot) {
-        if (snapshot.hasData) {
-          return ListView.separated(
-            separatorBuilder: (BuildContext context, int index) => Divider(height: 0),
-            itemCount: snapshot.data.length,
-            itemBuilder: (BuildContext context, int index) {
-              return _OrderSummaryListItem(
-                api: api,
-                order: snapshot.data[index],
-              );
-            },
-          );
+      builder: (BuildContext context, AsyncSnapshot<FindProjectOrderDatesResponse> snapshot) {
+        if (!snapshot.hasData) {
+          return Center(child: CircularProgressIndicator());
         }
-        return Center(child: CircularProgressIndicator());
+        return ListView.separated(
+          separatorBuilder: (BuildContext context, int index) => Divider(height: 0),
+          itemCount: snapshot.data.orders.length,
+          itemBuilder: (BuildContext context, int index) {
+            return _OrderSummaryListTile(orderSummary: snapshot.data.orders[index]);
+          },
+        );
       },
     );
   }
 }
 
-class _OrderSummaryListItem extends StatelessWidget {
-  _OrderSummaryListItem({this.api, this.order});
+class _OrderSummaryListTile extends StatelessWidget {
+  _OrderSummaryListTile({this.orderSummary});
 
-  final SupplyApi api;
-  final OrderSummary order;
+  final OrderSummary orderSummary;
 
   @override
   Widget build(BuildContext context) {
+    DateTime date = DateTime.fromMillisecondsSinceEpoch(orderSummary.date * 1000);
+    DateFormat format = DateFormat.yMMMMEEEEd();
+    String dateString = format.format(date);
+    String status = orderSummary.status;
+
     return ListTile(
-      title: Text(order.id),
-      trailing: Icon(Icons.keyboard_arrow_right),
+      title: Text("$dateString"),
+      trailing: (status == "New") ? Icon(Icons.edit) : Icon(Icons.keyboard_arrow_right),
       onTap: () => Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (BuildContext context) => OrderListWidget(
-                  api: api,
-                  id: order.id,
-                  date: order.date,
-                  status: order.status,
-                ),
+            builder: (BuildContext context) => OrderListWidget(orderSummary: orderSummary),
           )),
     );
   }
