@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:myapp/src/api/api_provider.dart';
+import 'package:myapp/src/api/service_provider.dart';
 import 'package:myapp/src/api/supply.dart';
 import 'package:myapp/src/bloc/bloc_provider.dart';
 import 'package:myapp/src/generated/supply.pb.dart';

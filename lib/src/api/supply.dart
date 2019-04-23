@@ -1,5 +1,5 @@
 import 'package:grpc/grpc.dart';
-import 'package:myapp/src/api/api_provider.dart';
+import 'package:myapp/src/api/service_provider.dart';
 import 'package:myapp/src/generated/supply.pbgrpc.dart';
 
 // https://medium.com/meeve/startup-friendly-guide-to-securing-grpc-connections-using-traefik-cc383c0b9d55

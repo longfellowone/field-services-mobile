@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/src/api/api_provider.dart';
+import 'package:myapp/src/api/service_provider.dart';
 import 'package:myapp/src/api/supply.dart';
 import 'package:myapp/src/orders/orders.dart';
 import 'package:myapp/src/projects/projects.dart';
