@@ -1,13 +1,30 @@
 import 'package:grpc/grpc.dart';
-import 'package:myapp/src/api/service_provider.dart';
 import 'package:myapp/src/generated/supply.pbgrpc.dart';
+import 'package:myapp/src/service/service_provider.dart';
 
 // https://medium.com/meeve/startup-friendly-guide-to-securing-grpc-connections-using-traefik-cc383c0b9d55
 
 class SupplyService extends ServiceBase {
   SupplyService() {
-    _client = SupplyClient(ClientChannel("10.0.2.2",
-        port: 9090, options: const ChannelOptions(credentials: ChannelCredentials.insecure())));
+    _client = SupplyClient(
+      ClientChannel(
+        "10.0.2.2",
+        port: 9090,
+        options: const ChannelOptions(
+          credentials: ChannelCredentials.insecure(),
+          idleTimeout: Duration(seconds: 10),
+        ),
+      ),
+    );
+//    _client = SupplyClient(
+//      ClientChannel(
+//        "192.168.0.104",
+//        port: 9090,
+//        options: const ChannelOptions(
+//          credentials: ChannelCredentials.insecure(),
+//        ),
+//      ),
+//    );
   }
 
   static SupplyClient _client;

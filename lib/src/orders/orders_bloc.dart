@@ -1,6 +1,6 @@
-import 'package:myapp/src/api/supply.dart';
 import 'package:myapp/src/bloc/bloc_provider.dart';
 import 'package:myapp/src/generated/supply.pb.dart';
+import 'package:myapp/src/service/supply.dart';
 
 class OrdersBloc extends BlocBase {
   OrdersBloc({this.service});

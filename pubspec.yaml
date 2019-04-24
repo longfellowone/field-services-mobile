@@ -19,6 +19,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  rxdart: ^0.21.0
   protobuf: ^0.13.9
   grpc: ^1.0.2
   intl: ^0.15.8

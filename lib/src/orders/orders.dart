@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:myapp/src/api/service_provider.dart';
-import 'package:myapp/src/api/supply.dart';
 import 'package:myapp/src/bloc/bloc_provider.dart';
 import 'package:myapp/src/generated/supply.pb.dart';
 import 'package:myapp/src/generated/supply.pbgrpc.dart';
 import 'package:myapp/src/orderlist/orderlist.dart';
 import 'package:myapp/src/orders/orders_bloc.dart';
+import 'package:myapp/src/service/service_provider.dart';
+import 'package:myapp/src/service/supply.dart';
 
-class OrderSummaryWidget extends StatelessWidget {
+class OrdersWidget extends StatelessWidget {
   static const String routeName = '/';
 
   @override
   Widget build(BuildContext context) {
-    SupplyService service = ServiceProvider.of<SupplyService>(context);
+    SupplyService _supply = ServiceProvider.of<SupplyService>(context);
 
     return BlocProvider<OrdersBloc>(
-      bloc: OrdersBloc(service: service),
+      bloc: OrdersBloc(service: _supply),
       child: Scaffold(
         appBar: AppBar(
           title: Text('Orders'),
         ),
-        body: _OrderSummaryBuilder(),
+        body: _OrdersBuilder(),
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
           onPressed: () {},
@@ -31,31 +31,32 @@ class OrderSummaryWidget extends StatelessWidget {
   }
 }
 
-class _OrderSummaryBuilder extends StatelessWidget {
+class _OrdersBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     OrdersBloc _ordersBloc = BlocProvider.of<OrdersBloc>(context);
 
     return StreamBuilder(
       stream: _ordersBloc.orderSummaries,
+//      initialData: , seed behavior subject
       builder: (BuildContext context, AsyncSnapshot<FindProjectOrderDatesResponse> snapshot) {
         if (!snapshot.hasData) {
-          return Center(child: CircularProgressIndicator());
+          return Center();
         }
         return ListView.separated(
           separatorBuilder: (BuildContext context, int index) => Divider(height: 0),
           itemCount: snapshot.data.orders.length,
-          itemBuilder: (BuildContext context, int index) {
-            return _OrderSummaryListTile(orderSummary: snapshot.data.orders[index]);
-          },
+          itemBuilder: (BuildContext context, int index) => _OrdersListTile(
+                orderSummary: snapshot.data.orders[index],
+              ),
         );
       },
     );
   }
 }
 
-class _OrderSummaryListTile extends StatelessWidget {
-  _OrderSummaryListTile({this.orderSummary});
+class _OrdersListTile extends StatelessWidget {
+  _OrdersListTile({this.orderSummary});
 
   final OrderSummary orderSummary;
 
@@ -67,7 +68,11 @@ class _OrderSummaryListTile extends StatelessWidget {
     String status = orderSummary.status;
 
     return ListTile(
-      title: Text("$dateString"),
+      title: Text(
+        dateString,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
       trailing: (status == "New") ? Icon(Icons.edit) : Icon(Icons.keyboard_arrow_right),
       onTap: () => Navigator.push(
           context,
