@@ -5,18 +5,14 @@ import 'package:myapp/src/generated/supply.pb.dart';
 import 'package:myapp/src/generated/supply.pbgrpc.dart';
 import 'package:myapp/src/orderlist/orderlist.dart';
 import 'package:myapp/src/orders/orders_bloc.dart';
-import 'package:myapp/src/service/service_provider.dart';
-import 'package:myapp/src/service/supply.dart';
 
 class OrdersWidget extends StatelessWidget {
   static const String routeName = '/';
 
   @override
   Widget build(BuildContext context) {
-    SupplyService _supplyService = ServiceProvider.of<SupplyService>(context);
-
     return BlocProvider<OrdersBloc>(
-      bloc: OrdersBloc(service: _supplyService),
+      bloc: OrdersBloc(),
       child: Scaffold(
         appBar: AppBar(
           title: Text('Orders'),

@@ -4,15 +4,16 @@ import 'package:myapp/src/service/supply.dart';
 import 'package:rxdart/rxdart.dart';
 
 class OrderListBloc extends BlocBase {
-  OrderListBloc({this.service, this.id});
+  OrderListBloc({this.id});
 
-  final SupplyService service;
   final String id;
+
+  SupplyService supply = SupplyService();
 
   BehaviorSubject<List<Order>> _orderListController = BehaviorSubject<List<Order>>();
 
   Stream<FindOrderResponse> get order async* {
-    yield await service.findOrder(id: id);
+    yield await supply.findOrder(id: id);
   }
 
   @override

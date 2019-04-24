@@ -4,8 +4,6 @@ import 'package:intl/intl.dart';
 import 'package:myapp/src/bloc/bloc_provider.dart';
 import 'package:myapp/src/generated/supply.pb.dart';
 import 'package:myapp/src/orderlist/orderlist_bloc.dart';
-import 'package:myapp/src/service/service_provider.dart';
-import 'package:myapp/src/service/supply.dart';
 
 class OrderListWidget extends StatelessWidget {
   OrderListWidget({this.orderSummary});
@@ -14,8 +12,6 @@ class OrderListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SupplyService _supplyService = ServiceProvider.of<SupplyService>(context);
-
     DateTime date = DateTime.fromMillisecondsSinceEpoch(orderSummary.date * 1000);
     DateFormat format = DateFormat.MMMMd();
     String dateString = format.format(date);
@@ -24,7 +20,6 @@ class OrderListWidget extends StatelessWidget {
     return BlocProvider<OrderListBloc>(
       bloc: OrderListBloc(
         id: orderSummary.id,
-        service: _supplyService,
       ),
       child: Scaffold(
         appBar: AppBar(
