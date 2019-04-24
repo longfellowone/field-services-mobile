@@ -13,10 +13,10 @@ class OrdersWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SupplyService _supply = ServiceProvider.of<SupplyService>(context);
+    SupplyService _supplyService = ServiceProvider.of<SupplyService>(context);
 
     return BlocProvider<OrdersBloc>(
-      bloc: OrdersBloc(service: _supply),
+      bloc: OrdersBloc(service: _supplyService),
       child: Scaffold(
         appBar: AppBar(
           title: Text('Orders'),

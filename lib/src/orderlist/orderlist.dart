@@ -14,7 +14,7 @@ class OrderListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SupplyService _supply = ServiceProvider.of<SupplyService>(context);
+    SupplyService _supplyService = ServiceProvider.of<SupplyService>(context);
 
     DateTime date = DateTime.fromMillisecondsSinceEpoch(orderSummary.date * 1000);
     DateFormat format = DateFormat.MMMMd();
@@ -24,7 +24,7 @@ class OrderListWidget extends StatelessWidget {
     return BlocProvider<OrderListBloc>(
       bloc: OrderListBloc(
         id: orderSummary.id,
-        service: _supply,
+        service: _supplyService,
       ),
       child: Scaffold(
         appBar: AppBar(
