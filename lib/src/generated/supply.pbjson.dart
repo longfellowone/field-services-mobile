@@ -7,7 +7,6 @@
 const CreateOrderRequest$json = const {
   '1': 'CreateOrderRequest',
   '2': const [
-    const {'1': 'id', '3': 1, '4': 1, '5': 9, '10': 'id'},
     const {'1': 'project_id', '3': 2, '4': 1, '5': 9, '10': 'projectId'},
     const {'1': 'name', '3': 3, '4': 1, '5': 9, '10': 'name'},
     const {'1': 'foreman', '3': 4, '4': 1, '5': 9, '10': 'foreman'},
@@ -17,6 +16,9 @@ const CreateOrderRequest$json = const {
 
 const CreateOrderResponse$json = const {
   '1': 'CreateOrderResponse',
+  '2': const [
+    const {'1': 'order', '3': 1, '4': 1, '5': 11, '6': '.server.Order', '10': 'order'},
+  ],
 };
 
 const AddOrderItemRequest$json = const {
@@ -31,6 +33,9 @@ const AddOrderItemRequest$json = const {
 
 const AddOrderItemResponse$json = const {
   '1': 'AddOrderItemResponse',
+  '2': const [
+    const {'1': 'order', '3': 1, '4': 1, '5': 11, '6': '.server.Order', '10': 'order'},
+  ],
 };
 
 const RemoveOrderItemRequest$json = const {
@@ -43,6 +48,9 @@ const RemoveOrderItemRequest$json = const {
 
 const RemoveOrderItemResponse$json = const {
   '1': 'RemoveOrderItemResponse',
+  '2': const [
+    const {'1': 'order', '3': 1, '4': 1, '5': 11, '6': '.server.Order', '10': 'order'},
+  ],
 };
 
 const ModifyRequestedQuantityRequest$json = const {
@@ -56,6 +64,9 @@ const ModifyRequestedQuantityRequest$json = const {
 
 const ModifyRequestedQuantityResponse$json = const {
   '1': 'ModifyRequestedQuantityResponse',
+  '2': const [
+    const {'1': 'order', '3': 1, '4': 1, '5': 11, '6': '.server.Order', '10': 'order'},
+  ],
 };
 
 const SendOrderRequest$json = const {
@@ -68,6 +79,9 @@ const SendOrderRequest$json = const {
 
 const SendOrderResponse$json = const {
   '1': 'SendOrderResponse',
+  '2': const [
+    const {'1': 'order', '3': 1, '4': 1, '5': 11, '6': '.server.Order', '10': 'order'},
+  ],
 };
 
 const ReceiveOrderItemRequest$json = const {
@@ -81,6 +95,9 @@ const ReceiveOrderItemRequest$json = const {
 
 const ReceiveOrderItemResponse$json = const {
   '1': 'ReceiveOrderItemResponse',
+  '2': const [
+    const {'1': 'order', '3': 1, '4': 1, '5': 11, '6': '.server.Order', '10': 'order'},
+  ],
 };
 
 const Order$json = const {

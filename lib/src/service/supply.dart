@@ -30,7 +30,7 @@ class SupplyService {
       return await _client.findProjectOrderDates(FindProjectOrderDatesRequest()..projectId = projectId);
     } catch (e) {
       print('Caught error: $e');
-      return null;
+      return e;
     }
   }
 

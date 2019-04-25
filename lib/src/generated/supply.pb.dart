@@ -10,7 +10,6 @@ import 'package:protobuf/protobuf.dart' as $pb;
 
 class CreateOrderRequest extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('CreateOrderRequest', package: const $pb.PackageName('server'))
-    ..aOS(1, 'id')
     ..aOS(2, 'projectId')
     ..aOS(3, 'name')
     ..aOS(4, 'foreman')
@@ -30,34 +29,30 @@ class CreateOrderRequest extends $pb.GeneratedMessage {
   static CreateOrderRequest getDefault() => _defaultInstance ??= create()..freeze();
   static CreateOrderRequest _defaultInstance;
 
-  $core.String get id => $_getS(0, '');
-  set id($core.String v) { $_setString(0, v); }
-  $core.bool hasId() => $_has(0);
-  void clearId() => clearField(1);
-
-  $core.String get projectId => $_getS(1, '');
-  set projectId($core.String v) { $_setString(1, v); }
-  $core.bool hasProjectId() => $_has(1);
+  $core.String get projectId => $_getS(0, '');
+  set projectId($core.String v) { $_setString(0, v); }
+  $core.bool hasProjectId() => $_has(0);
   void clearProjectId() => clearField(2);
 
-  $core.String get name => $_getS(2, '');
-  set name($core.String v) { $_setString(2, v); }
-  $core.bool hasName() => $_has(2);
+  $core.String get name => $_getS(1, '');
+  set name($core.String v) { $_setString(1, v); }
+  $core.bool hasName() => $_has(1);
   void clearName() => clearField(3);
 
-  $core.String get foreman => $_getS(3, '');
-  set foreman($core.String v) { $_setString(3, v); }
-  $core.bool hasForeman() => $_has(3);
+  $core.String get foreman => $_getS(2, '');
+  set foreman($core.String v) { $_setString(2, v); }
+  $core.bool hasForeman() => $_has(2);
   void clearForeman() => clearField(4);
 
-  $core.String get email => $_getS(4, '');
-  set email($core.String v) { $_setString(4, v); }
-  $core.bool hasEmail() => $_has(4);
+  $core.String get email => $_getS(3, '');
+  set email($core.String v) { $_setString(3, v); }
+  $core.bool hasEmail() => $_has(3);
   void clearEmail() => clearField(5);
 }
 
 class CreateOrderResponse extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('CreateOrderResponse', package: const $pb.PackageName('server'))
+    ..a<Order>(1, 'order', $pb.PbFieldType.OM, Order.getDefault, Order.create)
     ..hasRequiredFields = false
   ;
 
@@ -72,6 +67,11 @@ class CreateOrderResponse extends $pb.GeneratedMessage {
   static $pb.PbList<CreateOrderResponse> createRepeated() => $pb.PbList<CreateOrderResponse>();
   static CreateOrderResponse getDefault() => _defaultInstance ??= create()..freeze();
   static CreateOrderResponse _defaultInstance;
+
+  Order get order => $_getN(0);
+  set order(Order v) { setField(1, v); }
+  $core.bool hasOrder() => $_has(0);
+  void clearOrder() => clearField(1);
 }
 
 class AddOrderItemRequest extends $pb.GeneratedMessage {
@@ -118,6 +118,7 @@ class AddOrderItemRequest extends $pb.GeneratedMessage {
 
 class AddOrderItemResponse extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('AddOrderItemResponse', package: const $pb.PackageName('server'))
+    ..a<Order>(1, 'order', $pb.PbFieldType.OM, Order.getDefault, Order.create)
     ..hasRequiredFields = false
   ;
 
@@ -132,6 +133,11 @@ class AddOrderItemResponse extends $pb.GeneratedMessage {
   static $pb.PbList<AddOrderItemResponse> createRepeated() => $pb.PbList<AddOrderItemResponse>();
   static AddOrderItemResponse getDefault() => _defaultInstance ??= create()..freeze();
   static AddOrderItemResponse _defaultInstance;
+
+  Order get order => $_getN(0);
+  set order(Order v) { setField(1, v); }
+  $core.bool hasOrder() => $_has(0);
+  void clearOrder() => clearField(1);
 }
 
 class RemoveOrderItemRequest extends $pb.GeneratedMessage {
@@ -166,6 +172,7 @@ class RemoveOrderItemRequest extends $pb.GeneratedMessage {
 
 class RemoveOrderItemResponse extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('RemoveOrderItemResponse', package: const $pb.PackageName('server'))
+    ..a<Order>(1, 'order', $pb.PbFieldType.OM, Order.getDefault, Order.create)
     ..hasRequiredFields = false
   ;
 
@@ -180,6 +187,11 @@ class RemoveOrderItemResponse extends $pb.GeneratedMessage {
   static $pb.PbList<RemoveOrderItemResponse> createRepeated() => $pb.PbList<RemoveOrderItemResponse>();
   static RemoveOrderItemResponse getDefault() => _defaultInstance ??= create()..freeze();
   static RemoveOrderItemResponse _defaultInstance;
+
+  Order get order => $_getN(0);
+  set order(Order v) { setField(1, v); }
+  $core.bool hasOrder() => $_has(0);
+  void clearOrder() => clearField(1);
 }
 
 class ModifyRequestedQuantityRequest extends $pb.GeneratedMessage {
@@ -220,6 +232,7 @@ class ModifyRequestedQuantityRequest extends $pb.GeneratedMessage {
 
 class ModifyRequestedQuantityResponse extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('ModifyRequestedQuantityResponse', package: const $pb.PackageName('server'))
+    ..a<Order>(1, 'order', $pb.PbFieldType.OM, Order.getDefault, Order.create)
     ..hasRequiredFields = false
   ;
 
@@ -234,6 +247,11 @@ class ModifyRequestedQuantityResponse extends $pb.GeneratedMessage {
   static $pb.PbList<ModifyRequestedQuantityResponse> createRepeated() => $pb.PbList<ModifyRequestedQuantityResponse>();
   static ModifyRequestedQuantityResponse getDefault() => _defaultInstance ??= create()..freeze();
   static ModifyRequestedQuantityResponse _defaultInstance;
+
+  Order get order => $_getN(0);
+  set order(Order v) { setField(1, v); }
+  $core.bool hasOrder() => $_has(0);
+  void clearOrder() => clearField(1);
 }
 
 class SendOrderRequest extends $pb.GeneratedMessage {
@@ -268,6 +286,7 @@ class SendOrderRequest extends $pb.GeneratedMessage {
 
 class SendOrderResponse extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('SendOrderResponse', package: const $pb.PackageName('server'))
+    ..a<Order>(1, 'order', $pb.PbFieldType.OM, Order.getDefault, Order.create)
     ..hasRequiredFields = false
   ;
 
@@ -282,6 +301,11 @@ class SendOrderResponse extends $pb.GeneratedMessage {
   static $pb.PbList<SendOrderResponse> createRepeated() => $pb.PbList<SendOrderResponse>();
   static SendOrderResponse getDefault() => _defaultInstance ??= create()..freeze();
   static SendOrderResponse _defaultInstance;
+
+  Order get order => $_getN(0);
+  set order(Order v) { setField(1, v); }
+  $core.bool hasOrder() => $_has(0);
+  void clearOrder() => clearField(1);
 }
 
 class ReceiveOrderItemRequest extends $pb.GeneratedMessage {
@@ -322,6 +346,7 @@ class ReceiveOrderItemRequest extends $pb.GeneratedMessage {
 
 class ReceiveOrderItemResponse extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('ReceiveOrderItemResponse', package: const $pb.PackageName('server'))
+    ..a<Order>(1, 'order', $pb.PbFieldType.OM, Order.getDefault, Order.create)
     ..hasRequiredFields = false
   ;
 
@@ -336,6 +361,11 @@ class ReceiveOrderItemResponse extends $pb.GeneratedMessage {
   static $pb.PbList<ReceiveOrderItemResponse> createRepeated() => $pb.PbList<ReceiveOrderItemResponse>();
   static ReceiveOrderItemResponse getDefault() => _defaultInstance ??= create()..freeze();
   static ReceiveOrderItemResponse _defaultInstance;
+
+  Order get order => $_getN(0);
+  set order(Order v) { setField(1, v); }
+  $core.bool hasOrder() => $_has(0);
+  void clearOrder() => clearField(1);
 }
 
 class Order extends $pb.GeneratedMessage {

@@ -17,24 +17,35 @@ class OrdersWidget extends StatelessWidget {
         appBar: AppBar(
           title: Text('Orders'),
         ),
-        body: _OrdersBuilder(),
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
-          onPressed: () {},
-        ),
+        body: _OrdersListViewBuilder(),
+        floatingActionButton: _NewOrderFloatingActionButton(),
       ),
     );
   }
 }
 
-class _OrdersBuilder extends StatelessWidget {
+class _NewOrderFloatingActionButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return FloatingActionButton(
+      child: Icon(Icons.add),
+      onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => OrderListWidget(),
+            ),
+          ),
+    );
+  }
+}
+
+class _OrdersListViewBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     OrdersBloc _ordersBloc = BlocProvider.of<OrdersBloc>(context);
 
     return StreamBuilder(
       stream: _ordersBloc.orderSummaries,
-//      initialData: , seed behavior subject
       builder: (BuildContext context, AsyncSnapshot<FindProjectOrderDatesResponse> snapshot) {
         if (!snapshot.hasData) {
           return Center();
@@ -71,10 +82,11 @@ class _OrdersListTile extends StatelessWidget {
       ),
       trailing: (status == "New") ? Icon(Icons.edit) : Icon(Icons.keyboard_arrow_right),
       onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (BuildContext context) => OrderListWidget(orderSummary: orderSummary),
-          )),
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => OrderListWidget(orderId: orderSummary.id),
+            ),
+          ),
     );
   }
 }

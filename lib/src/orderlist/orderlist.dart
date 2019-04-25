@@ -1,29 +1,27 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:myapp/src/bloc/bloc_provider.dart';
 import 'package:myapp/src/generated/supply.pb.dart';
 import 'package:myapp/src/orderlist/orderlist_bloc.dart';
 
 class OrderListWidget extends StatelessWidget {
-  OrderListWidget({this.orderSummary});
+  OrderListWidget({this.orderId}); // TEMP date
 
-  final OrderSummary orderSummary;
+  final String orderId;
 
   @override
   Widget build(BuildContext context) {
-    DateTime date = DateTime.fromMillisecondsSinceEpoch(orderSummary.date * 1000);
-    DateFormat format = DateFormat.MMMMd();
-    String dateString = format.format(date);
-    String orderStatus = orderSummary.status;
+//    DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(date * 1000);
+//    DateFormat format = DateFormat.MMMMd();
+//    String dateString = format.format(dateTime);
 
     return BlocProvider<OrderListBloc>(
       bloc: OrderListBloc(
-        id: orderSummary.id,
+        id: orderId,
       ),
       child: Scaffold(
         appBar: AppBar(
-          title: Text("$dateString ($orderStatus)"),
+          title: Text("date"),
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.send),
@@ -35,28 +33,28 @@ class OrderListWidget extends StatelessWidget {
             ),
           ],
         ),
-        body: _OrderListBuilder(),
+        body: _OrderListViewBuilder(),
       ),
     );
   }
 }
 
-class _OrderListBuilder extends StatelessWidget {
+class _OrderListViewBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     OrderListBloc _ordersListBloc = BlocProvider.of<OrderListBloc>(context);
 
     return StreamBuilder(
       stream: _ordersListBloc.order,
-      builder: (BuildContext context, AsyncSnapshot<FindOrderResponse> snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<Order> snapshot) {
         if (!snapshot.hasData) {
           return Center();
         }
         return ListView.separated(
           separatorBuilder: (BuildContext context, int index) => Divider(height: 0),
-          itemCount: snapshot.data.order.items.length,
+          itemCount: snapshot.data.items.length,
           itemBuilder: (BuildContext context, int index) => _OrderListTile(
-                item: snapshot.data.order.items[index],
+                item: snapshot.data.items[index],
               ),
         );
       },
