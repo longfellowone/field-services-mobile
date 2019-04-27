@@ -128,6 +128,7 @@ const Item$json = const {
     const {'1': 'quantity_received', '3': 3, '4': 1, '5': 13, '10': 'quantityReceived'},
     const {'1': 'quantity_remaining', '3': 4, '4': 1, '5': 13, '10': 'quantityRemaining'},
     const {'1': 'item_status', '3': 5, '4': 1, '5': 9, '10': 'itemStatus'},
+    const {'1': 'deleted', '3': 6, '4': 1, '5': 8, '10': 'deleted'},
   ],
 };
 

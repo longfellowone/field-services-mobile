@@ -56,12 +56,12 @@ class _OrderListWidgetState extends State<OrderListWidget> {
           ],
         ),
         body: StreamBuilder(
-          stream: bloc.order,
-          builder: (BuildContext context, AsyncSnapshot<Order> snapshot) {
+          stream: bloc.orderItems,
+          builder: (BuildContext context, AsyncSnapshot<List<Item>> snapshot) {
             if (!snapshot.hasData) {
               return Center();
             }
-            return _OrderListViewBuilder(items: snapshot.data.items);
+            return _OrderListViewBuilder(items: snapshot.data);
           },
         ),
       ),
@@ -99,6 +99,8 @@ class _OrderListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    OrderListBloc orderListBloc = BlocProvider.of<OrderListBloc>(context);
+
     String requested = item.quantityRequested.toString();
     String uom = item.product.uom;
 
@@ -115,7 +117,7 @@ class _OrderListTile extends StatelessWidget {
           ),
         ),
       ),
-      onDismissed: (direction) => print(item.product.id),
+      onDismissed: (direction) => orderListBloc.removeOrderItem(item.product),
       direction: DismissDirection.endToStart,
       child: ListTile(
         title: Text(
@@ -125,7 +127,12 @@ class _OrderListTile extends StatelessWidget {
         ),
         subtitle: Text("$requested $uom"),
         trailing: Icon(Icons.keyboard_arrow_right),
-        onTap: () {},
+        onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) => _ItemDetails(item: item),
+              ),
+            ),
       ),
     );
 
@@ -141,5 +148,29 @@ class _OrderListTile extends StatelessWidget {
 //        ),
 //      ),
 //    );
+  }
+}
+
+class _ItemDetails extends StatelessWidget {
+  _ItemDetails({this.item});
+
+  final Item item;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Edit Quantity"),
+      ),
+      body: Column(
+        children: <Widget>[
+          Text(item.product.name),
+          RaisedButton(
+            child: Text("Save"),
+            onPressed: () {},
+          )
+        ],
+      ),
+    );
   }
 }

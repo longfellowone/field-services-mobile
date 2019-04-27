@@ -5,7 +5,6 @@ import 'package:myapp/src/service/service_provider.dart';
 class SupplyService extends ServiceBase {
   SupplyService() {
     _newSupplyClient();
-    print('service created');
   }
 
   static SupplyClient _client;
@@ -53,9 +52,20 @@ class SupplyService extends ServiceBase {
     }
   }
 
+  Future<RemoveOrderItemResponse> removeOrderItem({String orderId, String productId}) async {
+    try {
+      return await _client.removeOrderItem(RemoveOrderItemRequest()
+        ..id = orderId
+        ..productId = productId);
+    } catch (e) {
+      print('Caught error: $e');
+      return e;
+    }
+  }
+
   @override
   void dispose() {
-    // TODO: implement dispose
+    _channel.shutdown();
   }
 }
 

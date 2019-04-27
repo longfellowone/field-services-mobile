@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:myapp/src/bloc/bloc_provider.dart';
 import 'package:myapp/src/generated/supply.pb.dart';
 import 'package:myapp/src/generated/supply.pbgrpc.dart';
@@ -10,14 +8,18 @@ import 'package:rxdart/rxdart.dart';
 class OrderListBloc extends BlocBase {
   OrderListBloc({this.service, this.id}) {
     _findOrder(id);
-    print('hi');
+    _orderListController.listen((order) => _orderListItemController.add(order.items));
   }
 
   final SupplyService service;
   final String id;
 
   BehaviorSubject<Order> _orderListController = BehaviorSubject<Order>();
-  Stream<Order> get order => _orderListController.stream;
+  Observable<Order> get order => _orderListController;
+
+  BehaviorSubject<List<Item>> _orderListItemController = BehaviorSubject<List<Item>>();
+  Observable<List<Item>> get orderItems =>
+      _orderListItemController.stream.map((items) => items.where((item) => !item.deleted).toList());
 
   void _findOrder(String id) async {
     if (id == null) {
@@ -28,20 +30,19 @@ class OrderListBloc extends BlocBase {
   }
 
   void _createOrder() async {
-    print('creating order...');
     CreateOrderResponse response = await service.createOrder(
         email: "eamil", foreman: "foreman", name: "name", projectId: "cf510766-faf7-415e-a067-0c5ae5cb2ae8");
     _orderListController.add(response.order);
   }
 
+  void removeOrderItem(Product product) async {
+    RemoveOrderItemResponse response = await service.removeOrderItem(orderId: id, productId: product.id);
+    _orderListController.add(response.order);
+  }
+
   @override
   void dispose() {
-    print('dispose hit');
     _orderListController.close();
+    _orderListItemController.close();
   }
 }
-
-// Fetch order in didChangeDeps (currentOrderId sink)
-// Handle create order inside of bloc if fetch id is null
-// Sink response into order stream
-// Stream order

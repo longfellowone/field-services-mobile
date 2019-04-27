@@ -456,6 +456,7 @@ class Item extends $pb.GeneratedMessage {
     ..a<$core.int>(3, 'quantityReceived', $pb.PbFieldType.OU3)
     ..a<$core.int>(4, 'quantityRemaining', $pb.PbFieldType.OU3)
     ..aOS(5, 'itemStatus')
+    ..aOB(6, 'deleted')
     ..hasRequiredFields = false
   ;
 
@@ -495,6 +496,11 @@ class Item extends $pb.GeneratedMessage {
   set itemStatus($core.String v) { $_setString(4, v); }
   $core.bool hasItemStatus() => $_has(4);
   void clearItemStatus() => clearField(5);
+
+  $core.bool get deleted => $_get(5, false);
+  set deleted($core.bool v) { $_setBool(5, v); }
+  $core.bool hasDeleted() => $_has(5);
+  void clearDeleted() => clearField(6);
 }
 
 class Product extends $pb.GeneratedMessage {
