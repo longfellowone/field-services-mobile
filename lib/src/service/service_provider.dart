@@ -1,4 +1,3 @@
-/*
 import 'package:flutter/material.dart';
 
 Type _typeOf<T>() => T;
@@ -55,4 +54,3 @@ class _ServiceProviderInherited<T> extends InheritedWidget {
   @override
   bool updateShouldNotify(_ServiceProviderInherited oldWidget) => false;
 }
-*/

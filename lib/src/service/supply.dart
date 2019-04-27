@@ -1,14 +1,12 @@
 import 'package:grpc/grpc.dart';
 import 'package:myapp/src/generated/supply.pbgrpc.dart';
+import 'package:myapp/src/service/service_provider.dart';
 
-class SupplyService {
-  factory SupplyService() => _instance;
-
-  SupplyService._internal() {
+class SupplyService extends ServiceBase {
+  SupplyService() {
     _newSupplyClient();
+    print('service created');
   }
-
-  static final SupplyService _instance = SupplyService._internal();
 
   static SupplyClient _client;
   static ClientChannel _channel;
@@ -21,8 +19,7 @@ class SupplyService {
         credentials: ChannelCredentials.insecure(),
       ),
     );
-    _client = SupplyClient(_channel);
-    // options: CallOptions(timeout: Duration(seconds: 5)));
+    _client = SupplyClient(_channel); // options: CallOptions(timeout: Duration(seconds: 5)));
   }
 
   Future<FindProjectOrderDatesResponse> findProjectOrderDates({String projectId}) async {
@@ -41,6 +38,24 @@ class SupplyService {
       print('Caught error: $e');
       return e;
     }
+  }
+
+  Future<CreateOrderResponse> createOrder({String projectId, String name, String foreman, String email}) async {
+    try {
+      return await _client.createOrder(CreateOrderRequest()
+        ..projectId = projectId
+        ..name = name
+        ..foreman = foreman
+        ..email = email);
+    } catch (e) {
+      print('Caught error: $e');
+      return e;
+    }
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
   }
 }
 

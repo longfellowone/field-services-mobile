@@ -5,14 +5,18 @@ import 'package:myapp/src/generated/supply.pb.dart';
 import 'package:myapp/src/generated/supply.pbgrpc.dart';
 import 'package:myapp/src/orderlist/orderlist.dart';
 import 'package:myapp/src/orders/orders_bloc.dart';
+import 'package:myapp/src/service/service_provider.dart';
+import 'package:myapp/src/service/supply.dart';
 
 class OrdersWidget extends StatelessWidget {
   static const String routeName = '/';
 
   @override
   Widget build(BuildContext context) {
+    SupplyService _supply = ServiceProvider.of<SupplyService>(context);
+
     return BlocProvider<OrdersBloc>(
-      bloc: OrdersBloc(),
+      bloc: OrdersBloc(service: _supply),
       child: Scaffold(
         appBar: AppBar(
           title: Text('Orders'),
@@ -53,9 +57,7 @@ class _OrdersListViewBuilder extends StatelessWidget {
         return ListView.separated(
           separatorBuilder: (BuildContext context, int index) => Divider(height: 0),
           itemCount: snapshot.data.orders.length,
-          itemBuilder: (BuildContext context, int index) => _OrdersListTile(
-                orderSummary: snapshot.data.orders[index],
-              ),
+          itemBuilder: (BuildContext context, int index) => _OrdersListTile(orderSummary: snapshot.data.orders[index]),
         );
       },
     );

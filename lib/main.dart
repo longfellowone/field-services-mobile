@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/src/app/app.dart';
 
-void main() => runApp(App());
+void main() {
+//  debugPaintSizeEnabled = true;
+  runApp(App());
+}

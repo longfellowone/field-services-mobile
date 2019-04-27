@@ -1,27 +1,49 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:myapp/src/bloc/bloc_provider.dart';
 import 'package:myapp/src/generated/supply.pb.dart';
 import 'package:myapp/src/orderlist/orderlist_bloc.dart';
+import 'package:myapp/src/service/service_provider.dart';
+import 'package:myapp/src/service/supply.dart';
 
-class OrderListWidget extends StatelessWidget {
+class OrderListWidget extends StatefulWidget {
   OrderListWidget({this.orderId}); // TEMP date
 
   final String orderId;
 
   @override
-  Widget build(BuildContext context) {
-//    DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(date * 1000);
-//    DateFormat format = DateFormat.MMMMd();
-//    String dateString = format.format(dateTime);
+  _OrderListWidgetState createState() => _OrderListWidgetState();
+}
 
+class _OrderListWidgetState extends State<OrderListWidget> {
+  OrderListBloc bloc;
+
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    SupplyService _supply = ServiceProvider.of<SupplyService>(context);
+
+    bloc = OrderListBloc(
+      service: _supply,
+      id: widget.orderId,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return BlocProvider<OrderListBloc>(
-      bloc: OrderListBloc(
-        id: orderId,
-      ),
+      bloc: bloc,
       child: Scaffold(
         appBar: AppBar(
-          title: Text("date"),
+          title: StreamBuilder<Order>(
+              stream: bloc.order,
+              builder: (BuildContext context, AsyncSnapshot<Order> snapshot) {
+                if (!snapshot.hasData) {
+                  return Text("Loading...");
+                }
+                return _dateText(snapshot.data.date);
+              }),
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.send),
@@ -33,31 +55,39 @@ class OrderListWidget extends StatelessWidget {
             ),
           ],
         ),
-        body: _OrderListViewBuilder(),
+        body: StreamBuilder(
+          stream: bloc.order,
+          builder: (BuildContext context, AsyncSnapshot<Order> snapshot) {
+            if (!snapshot.hasData) {
+              return Center();
+            }
+            return _OrderListViewBuilder(items: snapshot.data.items);
+          },
+        ),
       ),
     );
+  }
+
+  Widget _dateText(int date) {
+    DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(date * 1000);
+    DateFormat format = DateFormat.MMMMd();
+    String dateString = format.format(dateTime);
+
+    return Text(dateString);
   }
 }
 
 class _OrderListViewBuilder extends StatelessWidget {
+  _OrderListViewBuilder({this.items});
+
+  final List<Item> items;
+
   @override
   Widget build(BuildContext context) {
-    OrderListBloc _ordersListBloc = BlocProvider.of<OrderListBloc>(context);
-
-    return StreamBuilder(
-      stream: _ordersListBloc.order,
-      builder: (BuildContext context, AsyncSnapshot<Order> snapshot) {
-        if (!snapshot.hasData) {
-          return Center();
-        }
-        return ListView.separated(
-          separatorBuilder: (BuildContext context, int index) => Divider(height: 0),
-          itemCount: snapshot.data.items.length,
-          itemBuilder: (BuildContext context, int index) => _OrderListTile(
-                item: snapshot.data.items[index],
-              ),
-        );
-      },
+    return ListView.separated(
+      separatorBuilder: (BuildContext context, int index) => Divider(height: 0),
+      itemCount: items.length,
+      itemBuilder: (BuildContext context, int index) => _OrderListTile(item: items[index]),
     );
   }
 }
