@@ -4,6 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:myapp/src/bloc/bloc_provider.dart';
 import 'package:myapp/src/generated/supply.pb.dart';
 import 'package:myapp/src/orderlist/orderlist_bloc.dart';
+import 'package:myapp/src/search/search.dart';
+import 'package:myapp/src/search/search_bloc.dart';
 import 'package:myapp/src/service/service_provider.dart';
 import 'package:myapp/src/service/supply.dart';
 
@@ -17,27 +19,30 @@ class OrderListWidget extends StatefulWidget {
 }
 
 class _OrderListWidgetState extends State<OrderListWidget> {
-  OrderListBloc bloc;
+  OrderListBloc _orderListBloc;
+  SearchBloc _searchBloc;
 
   void didChangeDependencies() {
     super.didChangeDependencies();
 
     SupplyService _supply = ServiceProvider.of<SupplyService>(context);
 
-    bloc = OrderListBloc(
+    _orderListBloc = OrderListBloc(
       service: _supply,
       id: widget.orderId,
     );
+
+    _searchBloc = SearchBloc(service: _supply);
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<OrderListBloc>(
-      bloc: bloc,
+      bloc: _orderListBloc,
       child: Scaffold(
         appBar: AppBar(
           title: StreamBuilder<Order>(
-              stream: bloc.order,
+              stream: _orderListBloc.order,
               builder: (BuildContext context, AsyncSnapshot<Order> snapshot) {
                 if (!snapshot.hasData) {
                   return Text("Loading...");
@@ -51,12 +56,12 @@ class _OrderListWidgetState extends State<OrderListWidget> {
             ),
             IconButton(
               icon: Icon(Icons.search),
-              onPressed: () {},
+              onPressed: () => showSearch(context: context, delegate: ProductSearchDelegate(searchBloc: _searchBloc)),
             ),
           ],
         ),
         body: StreamBuilder(
-          stream: bloc.orderItems,
+          stream: _orderListBloc.orderItems,
           builder: (BuildContext context, AsyncSnapshot<List<Item>> snapshot) {
             if (!snapshot.hasData) {
               return Center();
@@ -126,7 +131,7 @@ class _OrderListTile extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
         ),
         subtitle: Text("$requested $uom"),
-        trailing: Icon(Icons.keyboard_arrow_right),
+        trailing: Icon(Icons.edit),
         onTap: () => Navigator.push(
               context,
               MaterialPageRoute(

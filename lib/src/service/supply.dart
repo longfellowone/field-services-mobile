@@ -12,7 +12,8 @@ class SupplyService extends ServiceBase {
 
   void _newSupplyClient() {
     _channel = ClientChannel(
-      "10.0.2.2", //  "192.168.0.104"
+//      "10.0.2.2",
+      "192.168.0.104",
       port: 9090,
       options: const ChannelOptions(
         credentials: ChannelCredentials.insecure(),
@@ -66,6 +67,15 @@ class SupplyService extends ServiceBase {
       return await _client.removeOrderItem(RemoveOrderItemRequest()
         ..id = orderId
         ..productId = productId);
+    } catch (e) {
+      print('Caught error: $e');
+      return e;
+    }
+  }
+
+  Future<ProductSearchResponse> search({String query}) async {
+    try {
+      return await _client.productSearch(ProductSearchRequest()..name = query);
     } catch (e) {
       print('Caught error: $e');
       return e;

@@ -1,8 +1,5 @@
-import 'dart:async';
-
 import 'package:myapp/src/bloc/bloc_provider.dart';
 import 'package:myapp/src/generated/supply.pb.dart';
-import 'package:myapp/src/generated/supply.pbgrpc.dart';
 import 'package:myapp/src/service/supply.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -12,11 +9,21 @@ class SearchBloc extends BlocBase {
 
   final SupplyService service;
 
-  BehaviorSubject<Order> _orderListController = BehaviorSubject<Order>();
-  Stream<Order> get order => _orderListController;
+  BehaviorSubject<List<Result>> _searchController = BehaviorSubject<List<Result>>();
+  Observable<List<Result>> get results => _searchController.stream;
+
+  void search({String query}) async {
+    if (query == "") return;
+
+    print('hit');
+    try {
+      ProductSearchResponse response = await service.search(query: query);
+      _searchController.add(response.results);
+    } catch (e) {}
+  }
 
   @override
   void dispose() {
-    _orderListController.close();
+    _searchController.close();
   }
 }
