@@ -35,9 +35,18 @@ class OrderListBloc extends BlocBase {
     } catch (e) {}
   }
 
-  void removeOrderItem({Product product}) async {
+  void removeOrderItem({Item item}) async {
     try {
-      RemoveOrderItemResponse response = await service.removeOrderItem(orderId: id, product: product);
+      RemoveOrderItemResponse response = await service.removeOrderItem(orderId: id, item: item);
+      _orderListController.add(response.order);
+    } catch (e) {}
+  }
+
+  void modifyRequestedQuantity({Item item, int quantity}) async {
+    if (item.quantityRequested == null) return;
+    try {
+      ModifyRequestedQuantityResponse response =
+          await service.modifyRequestedQuantity(orderId: id, item: item, quantity: quantity);
       _orderListController.add(response.order);
     } catch (e) {}
   }

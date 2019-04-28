@@ -15,7 +15,6 @@ class SearchBloc extends BlocBase {
   void search({String query}) async {
     if (query == "") return;
 
-    print('hit');
     try {
       ProductSearchResponse response = await service.search(query: query);
       _searchController.add(response.results);

@@ -41,12 +41,20 @@ class ProductSearchDelegate extends SearchDelegate<Product> {
     return StreamBuilder<List<Result>>(
       stream: searchBloc.results,
       builder: (BuildContext context, AsyncSnapshot<List<Result>> snapshot) {
-        if (query == "") {
+        if (query == "" || !snapshot.hasData) {
           return Container();
         }
 
-        if (!snapshot.hasData) {
-          return Text("no results");
+        if (snapshot.data.length == 0) {
+          return ListView(
+            children: <Widget>[
+              ListTile(
+                title: Center(
+                  child: Text("No results"),
+                ),
+              ),
+            ],
+          );
         }
 
         return ListView.builder(
@@ -58,7 +66,6 @@ class ProductSearchDelegate extends SearchDelegate<Product> {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-//              leading: Icon(Icons.add_circle_outline),
               onTap: () {
                 close(context, snapshot.data[index].product);
               },

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -61,7 +63,7 @@ class _OrderListWidgetState extends State<OrderListWidget> {
                   context: context,
                   delegate: ProductSearchDelegate(searchBloc: _searchBloc),
                 );
-                _orderListBloc.addOrderItem(product: product);
+                if (product != null) _orderListBloc.addOrderItem(product: product);
               },
             ),
           ],
@@ -98,7 +100,9 @@ class _OrderListViewBuilder extends StatelessWidget {
     return ListView.separated(
       separatorBuilder: (BuildContext context, int index) => Divider(height: 0),
       itemCount: items.length,
-      itemBuilder: (BuildContext context, int index) => _OrderListTile(item: items[index]),
+      itemBuilder: (BuildContext context, int index) => _OrderListTile(
+            item: items[index],
+          ),
     );
   }
 }
@@ -115,8 +119,18 @@ class _OrderListTile extends StatelessWidget {
     String requested = item.quantityRequested.toString();
     String uom = item.product.uom;
 
+    Future<String> _showDialog(BuildContext context) async {
+      return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return _ShowDialogForm(item: item);
+        },
+      );
+    }
+
     return Dismissible(
-      key: Key(item.product.id),
+      // Key hack to keep from crashing list with loss of network
+      key: Key(item.product.id + Random().nextInt(10000).toString()),
       background: Container(
         color: Colors.red,
         alignment: AlignmentDirectional.centerEnd,
@@ -128,7 +142,7 @@ class _OrderListTile extends StatelessWidget {
           ),
         ),
       ),
-      onDismissed: (direction) => orderListBloc.removeOrderItem(product: item.product),
+      onDismissed: (direction) => orderListBloc.removeOrderItem(item: item),
       direction: DismissDirection.endToStart,
       child: ListTile(
         title: Text(
@@ -138,50 +152,61 @@ class _OrderListTile extends StatelessWidget {
         ),
         subtitle: Text("$requested $uom"),
         trailing: Icon(Icons.edit),
-        onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (BuildContext context) => _ItemDetails(item: item),
-              ),
-            ),
+        onTap: () async {
+          String quantity = await _showDialog(context);
+          if (quantity != null) orderListBloc.modifyRequestedQuantity(item: item, quantity: int.parse(quantity));
+        },
       ),
     );
-
-//    return Card(
-//      child: Padding(
-//        padding: const EdgeInsets.all(16),
-//        child: Row(
-//          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//          children: <Widget>[
-//            Text(item.product.name),
-//            Text('$requested $uom'),
-//          ],
-//        ),
-//      ),
-//    );
   }
 }
 
-class _ItemDetails extends StatelessWidget {
-  _ItemDetails({this.item});
+class _ShowDialogForm extends StatefulWidget {
+  _ShowDialogForm({this.item});
 
   final Item item;
 
   @override
+  _ShowDialogFormState createState() => _ShowDialogFormState();
+}
+
+class _ShowDialogFormState extends State<_ShowDialogForm> {
+  TextEditingController _textEditingController;
+
+  @override
+  void initState() {
+    super.initState();
+    _textEditingController =
+        TextEditingController(text: widget.item.quantityRequested == 0 ? "" : widget.item.quantityRequested.toString());
+  }
+
+  @override
+  void dispose() {
+    _textEditingController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Edit Quantity"),
+    return AlertDialog(
+      title: Text("Edit Quantity"),
+      content: TextField(
+        controller: _textEditingController,
+        autofocus: true,
+        keyboardType: TextInputType.number,
+        textInputAction: TextInputAction.done,
+        maxLength: 8,
       ),
-      body: Column(
-        children: <Widget>[
-          Text(item.product.name),
-          RaisedButton(
-            child: Text("Save"),
-            onPressed: () {},
-          )
-        ],
-      ),
+      actions: <Widget>[
+        FlatButton(
+          child: Text("CANCEL"),
+          onPressed: () => Navigator.pop(context),
+        ),
+        FlatButton(
+          child: Text("ACCEPT"),
+          onPressed: () => Navigator.pop(context, _textEditingController.text),
+        )
+      ],
     );
   }
 }
