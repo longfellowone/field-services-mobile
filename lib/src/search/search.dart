@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:myapp/src/generated/supply.pb.dart';
 import 'package:myapp/src/search/search_bloc.dart';
 
-class ProductSearchDelegate extends SearchDelegate {
+class ProductSearchDelegate extends SearchDelegate<Product> {
   ProductSearchDelegate({this.searchBloc});
 
   final SearchBloc searchBloc;

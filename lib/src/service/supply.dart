@@ -62,11 +62,24 @@ class SupplyService extends ServiceBase {
     }
   }
 
-  Future<RemoveOrderItemResponse> removeOrderItem({String orderId, String productId}) async {
+  Future<AddOrderItemResponse> addOrderItem({String orderId, Product product}) async {
+    try {
+      return await _client.addOrderItem(AddOrderItemRequest()
+        ..id = orderId
+        ..productId = product.id
+        ..name = product.name
+        ..uom = product.uom);
+    } catch (e) {
+      print('Caught error: $e');
+      return e;
+    }
+  }
+
+  Future<RemoveOrderItemResponse> removeOrderItem({String orderId, Product product}) async {
     try {
       return await _client.removeOrderItem(RemoveOrderItemRequest()
         ..id = orderId
-        ..productId = productId);
+        ..productId = product.id);
     } catch (e) {
       print('Caught error: $e');
       return e;

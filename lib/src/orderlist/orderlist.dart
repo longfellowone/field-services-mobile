@@ -56,7 +56,13 @@ class _OrderListWidgetState extends State<OrderListWidget> {
             ),
             IconButton(
               icon: Icon(Icons.search),
-              onPressed: () => showSearch(context: context, delegate: ProductSearchDelegate(searchBloc: _searchBloc)),
+              onPressed: () async {
+                final Product product = await showSearch<Product>(
+                  context: context,
+                  delegate: ProductSearchDelegate(searchBloc: _searchBloc),
+                );
+                _orderListBloc.addOrderItem(product: product);
+              },
             ),
           ],
         ),
