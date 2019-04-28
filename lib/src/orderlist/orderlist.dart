@@ -121,25 +121,13 @@ class _ShowSendConfirmationState extends State<_ShowSendConfirmation> {
 
   @override
   Widget build(BuildContext context) {
-    OrderListBloc _orderListBloc = BlocProvider.of<OrderListBloc>(context);
+//    OrderListBloc _orderListBloc = BlocProvider.of<OrderListBloc>(context);
 
     return Scaffold(
       appBar: AppBar(
         title: Text("Review Order"),
       ),
-      body: Column(
-        children: <Widget>[
-          Text("Special Instruction"),
-          RaisedButton(
-            child: Text("SEND"),
-            onPressed: () {},
-          ),
-          RaisedButton(
-            child: Text("CANCEL"),
-            onPressed: () {},
-          )
-        ],
-      ),
+      body: CustomScrollView(),
     );
   }
 }
@@ -253,11 +241,11 @@ class _ShowEditQuantityDialogState extends State<_ShowEditQuantityDialog> {
       ),
       actions: <Widget>[
         FlatButton(
-          child: Text("DONE"),
+          child: Text("CANCEL"),
           onPressed: () => Navigator.pop(context),
         ),
         FlatButton(
-          child: Text("ACCEPT"),
+          child: Text("DONE"),
           onPressed: () =>
               Navigator.pop(context, _textEditingController.text == null ? 0 : _textEditingController.text),
         )

@@ -11,8 +11,6 @@ class OrdersBloc extends BlocBase {
   final SupplyService service;
   final String projectId;
 
-  List<OrderSummary> _list = []; // hack?
-
   BehaviorSubject<List<OrderSummary>> _ordersController = BehaviorSubject<List<OrderSummary>>();
   Observable<List<OrderSummary>> get orderSummaries => _ordersController;
 
@@ -20,30 +18,27 @@ class OrdersBloc extends BlocBase {
     try {
       FindProjectOrderDatesResponse response = await service.findProjectOrderDates(projectId: projectId);
 
-      _list.addAll(response.orders);
-      _ordersController.add(_list);
+      _ordersController.add(response.orders);
     } catch (e) {}
   }
 
   void createOrder() async {
     try {
+      // TODO
       CreateOrderResponse response = await service.createOrder(
           email: "eamil", foreman: "foreman", name: "name", projectId: "cf510766-faf7-415e-a067-0c5ae5cb2ae8");
 
-      _list.insert(0, response.order);
-      _ordersController.add(_list);
+      _ordersController.add(_ordersController.value..insert(0, response.order));
     } catch (e) {}
   }
 
   void deleteOrder({OrderSummary orderSummary, int index}) async {
     try {
-      _list.remove(orderSummary);
-      _ordersController.add(_list);
+      _ordersController.add(_ordersController.value..remove(orderSummary));
 
       await service.deleteOrder(orderId: orderSummary.id);
     } catch (e) {
-      _list.insert(index, orderSummary);
-      _ordersController.add(_list);
+      _ordersController.add(_ordersController.value..insert(index, orderSummary));
     }
   }
 
