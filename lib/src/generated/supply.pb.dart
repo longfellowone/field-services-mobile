@@ -52,7 +52,7 @@ class CreateOrderRequest extends $pb.GeneratedMessage {
 
 class CreateOrderResponse extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('CreateOrderResponse', package: const $pb.PackageName('server'))
-    ..a<Order>(1, 'order', $pb.PbFieldType.OM, Order.getDefault, Order.create)
+    ..a<OrderSummary>(1, 'order', $pb.PbFieldType.OM, OrderSummary.getDefault, OrderSummary.create)
     ..hasRequiredFields = false
   ;
 
@@ -68,8 +68,8 @@ class CreateOrderResponse extends $pb.GeneratedMessage {
   static CreateOrderResponse getDefault() => _defaultInstance ??= create()..freeze();
   static CreateOrderResponse _defaultInstance;
 
-  Order get order => $_getN(0);
-  set order(Order v) { setField(1, v); }
+  OrderSummary get order => $_getN(0);
+  set order(OrderSummary v) { setField(1, v); }
   $core.bool hasOrder() => $_has(0);
   void clearOrder() => clearField(1);
 }
@@ -666,6 +666,48 @@ class FindProjectOrderDatesResponse extends $pb.GeneratedMessage {
   static FindProjectOrderDatesResponse _defaultInstance;
 
   $core.List<OrderSummary> get orders => $_getList(0);
+}
+
+class DeleteOrderRequest extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('DeleteOrderRequest', package: const $pb.PackageName('server'))
+    ..aOS(1, 'orderId')
+    ..hasRequiredFields = false
+  ;
+
+  DeleteOrderRequest() : super();
+  DeleteOrderRequest.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  DeleteOrderRequest.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  DeleteOrderRequest clone() => DeleteOrderRequest()..mergeFromMessage(this);
+  DeleteOrderRequest copyWith(void Function(DeleteOrderRequest) updates) => super.copyWith((message) => updates(message as DeleteOrderRequest));
+  $pb.BuilderInfo get info_ => _i;
+  static DeleteOrderRequest create() => DeleteOrderRequest();
+  DeleteOrderRequest createEmptyInstance() => create();
+  static $pb.PbList<DeleteOrderRequest> createRepeated() => $pb.PbList<DeleteOrderRequest>();
+  static DeleteOrderRequest getDefault() => _defaultInstance ??= create()..freeze();
+  static DeleteOrderRequest _defaultInstance;
+
+  $core.String get orderId => $_getS(0, '');
+  set orderId($core.String v) { $_setString(0, v); }
+  $core.bool hasOrderId() => $_has(0);
+  void clearOrderId() => clearField(1);
+}
+
+class DeleteOrderResponse extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('DeleteOrderResponse', package: const $pb.PackageName('server'))
+    ..hasRequiredFields = false
+  ;
+
+  DeleteOrderResponse() : super();
+  DeleteOrderResponse.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  DeleteOrderResponse.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  DeleteOrderResponse clone() => DeleteOrderResponse()..mergeFromMessage(this);
+  DeleteOrderResponse copyWith(void Function(DeleteOrderResponse) updates) => super.copyWith((message) => updates(message as DeleteOrderResponse));
+  $pb.BuilderInfo get info_ => _i;
+  static DeleteOrderResponse create() => DeleteOrderResponse();
+  DeleteOrderResponse createEmptyInstance() => create();
+  static $pb.PbList<DeleteOrderResponse> createRepeated() => $pb.PbList<DeleteOrderResponse>();
+  static DeleteOrderResponse getDefault() => _defaultInstance ??= create()..freeze();
+  static DeleteOrderResponse _defaultInstance;
 }
 
 class Result extends $pb.GeneratedMessage {

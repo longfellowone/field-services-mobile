@@ -117,7 +117,7 @@ class _OrderListTile extends StatelessWidget {
           ),
         ),
       ),
-      onDismissed: (direction) => orderListBloc.removeOrderItem(item.product),
+      onDismissed: (direction) => orderListBloc.removeOrderItem(product: item.product),
       direction: DismissDirection.endToStart,
       child: ListTile(
         title: Text(

@@ -52,6 +52,15 @@ class SupplyService extends ServiceBase {
     }
   }
 
+  Future<DeleteOrderResponse> deleteOrder({String orderId}) async {
+    try {
+      return await _client.deleteOrder(DeleteOrderRequest()..orderId = orderId);
+    } catch (e) {
+      print('Caught error: $e');
+      return e;
+    }
+  }
+
   Future<RemoveOrderItemResponse> removeOrderItem({String orderId, String productId}) async {
     try {
       return await _client.removeOrderItem(RemoveOrderItemRequest()

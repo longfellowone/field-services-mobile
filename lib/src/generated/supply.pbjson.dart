@@ -17,7 +17,7 @@ const CreateOrderRequest$json = const {
 const CreateOrderResponse$json = const {
   '1': 'CreateOrderResponse',
   '2': const [
-    const {'1': 'order', '3': 1, '4': 1, '5': 11, '6': '.server.Order', '10': 'order'},
+    const {'1': 'order', '3': 1, '4': 1, '5': 11, '6': '.server.OrderSummary', '10': 'order'},
   ],
 };
 
@@ -176,6 +176,17 @@ const FindProjectOrderDatesResponse$json = const {
   '2': const [
     const {'1': 'orders', '3': 1, '4': 3, '5': 11, '6': '.server.OrderSummary', '10': 'orders'},
   ],
+};
+
+const DeleteOrderRequest$json = const {
+  '1': 'DeleteOrderRequest',
+  '2': const [
+    const {'1': 'order_id', '3': 1, '4': 1, '5': 9, '10': 'orderId'},
+  ],
+};
+
+const DeleteOrderResponse$json = const {
+  '1': 'DeleteOrderResponse',
 };
 
 const Result$json = const {

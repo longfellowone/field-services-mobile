@@ -7,7 +7,7 @@ import 'package:rxdart/rxdart.dart';
 // Reduce down to one bloc?
 class OrderListBloc extends BlocBase {
   OrderListBloc({this.service, this.id}) {
-    _findOrder(id);
+    _findOrder(id: id);
     _orderListController.listen((order) => _orderListItemController.add(order.items));
   }
 
@@ -21,23 +21,18 @@ class OrderListBloc extends BlocBase {
   Observable<List<Item>> get orderItems =>
       _orderListItemController.stream.map((items) => items.where((item) => !item.deleted).toList());
 
-  void _findOrder(String id) async {
-    if (id == null) {
-      return _createOrder();
-    }
-    FindOrderResponse response = await service.findOrder(id: id);
-    _orderListController.add(response.order);
+  void _findOrder({String id}) async {
+    try {
+      FindOrderResponse response = await service.findOrder(id: id);
+      _orderListController.add(response.order);
+    } catch (e) {}
   }
 
-  void _createOrder() async {
-    CreateOrderResponse response = await service.createOrder(
-        email: "eamil", foreman: "foreman", name: "name", projectId: "cf510766-faf7-415e-a067-0c5ae5cb2ae8");
-    _orderListController.add(response.order);
-  }
-
-  void removeOrderItem(Product product) async {
-    RemoveOrderItemResponse response = await service.removeOrderItem(orderId: id, productId: product.id);
-    _orderListController.add(response.order);
+  void removeOrderItem({Product product}) async {
+    try {
+      RemoveOrderItemResponse response = await service.removeOrderItem(orderId: id, productId: product.id);
+      _orderListController.add(response.order);
+    } catch (e) {}
   }
 
   @override

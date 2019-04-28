@@ -60,6 +60,12 @@ class SupplyClient extends $grpc.Client {
       (FindProjectOrderDatesRequest value) => value.writeToBuffer(),
       ($core.List<$core.int> value) =>
           FindProjectOrderDatesResponse.fromBuffer(value));
+  static final _$deleteOrder =
+      $grpc.ClientMethod<DeleteOrderRequest, DeleteOrderResponse>(
+          '/server.Supply/DeleteOrder',
+          (DeleteOrderRequest value) => value.writeToBuffer(),
+          ($core.List<$core.int> value) =>
+              DeleteOrderResponse.fromBuffer(value));
   static final _$productSearch =
       $grpc.ClientMethod<ProductSearchRequest, ProductSearchResponse>(
           '/server.Supply/ProductSearch',
@@ -152,6 +158,15 @@ class SupplyClient extends $grpc.Client {
       {$grpc.CallOptions options}) {
     final call = $createCall(
         _$findProjectOrderDates, $async.Stream.fromIterable([request]),
+        options: options);
+    return $grpc.ResponseFuture(call);
+  }
+
+  $grpc.ResponseFuture<DeleteOrderResponse> deleteOrder(
+      DeleteOrderRequest request,
+      {$grpc.CallOptions options}) {
+    final call = $createCall(
+        _$deleteOrder, $async.Stream.fromIterable([request]),
         options: options);
     return $grpc.ResponseFuture(call);
   }
@@ -261,6 +276,13 @@ abstract class SupplyServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) =>
             FindProjectOrderDatesRequest.fromBuffer(value),
         (FindProjectOrderDatesResponse value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<DeleteOrderRequest, DeleteOrderResponse>(
+        'DeleteOrder',
+        deleteOrder_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => DeleteOrderRequest.fromBuffer(value),
+        (DeleteOrderResponse value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<ProductSearchRequest, ProductSearchResponse>(
         'ProductSearch',
         productSearch_Pre,
@@ -331,6 +353,11 @@ abstract class SupplyServiceBase extends $grpc.Service {
     return findProjectOrderDates(call, await request);
   }
 
+  $async.Future<DeleteOrderResponse> deleteOrder_Pre(
+      $grpc.ServiceCall call, $async.Future request) async {
+    return deleteOrder(call, await request);
+  }
+
   $async.Future<ProductSearchResponse> productSearch_Pre(
       $grpc.ServiceCall call, $async.Future request) async {
     return productSearch(call, await request);
@@ -367,6 +394,8 @@ abstract class SupplyServiceBase extends $grpc.Service {
       $grpc.ServiceCall call, FindOrderRequest request);
   $async.Future<FindProjectOrderDatesResponse> findProjectOrderDates(
       $grpc.ServiceCall call, FindProjectOrderDatesRequest request);
+  $async.Future<DeleteOrderResponse> deleteOrder(
+      $grpc.ServiceCall call, DeleteOrderRequest request);
   $async.Future<ProductSearchResponse> productSearch(
       $grpc.ServiceCall call, ProductSearchRequest request);
   $async.Future<CreateProjectResponse> createProject(
