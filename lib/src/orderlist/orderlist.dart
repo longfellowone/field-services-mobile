@@ -26,7 +26,6 @@ class _OrderListWidgetState extends State<OrderListWidget> {
 
   void didChangeDependencies() {
     super.didChangeDependencies();
-
     SupplyService _supply = ServiceProvider.of<SupplyService>(context);
 
     _orderListBloc = OrderListBloc(
@@ -41,52 +40,107 @@ class _OrderListWidgetState extends State<OrderListWidget> {
   Widget build(BuildContext context) {
     return BlocProvider<OrderListBloc>(
       bloc: _orderListBloc,
-      child: Scaffold(
-        appBar: AppBar(
-          title: StreamBuilder<Order>(
-              stream: _orderListBloc.order,
-              builder: (BuildContext context, AsyncSnapshot<Order> snapshot) {
-                if (!snapshot.hasData) {
-                  return Text("Loading...");
-                }
-                return _dateText(snapshot.data.date);
-              }),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.send),
-              onPressed: () {},
-            ),
-            IconButton(
-              icon: Icon(Icons.search),
-              onPressed: () async {
-                final Product product = await showSearch<Product>(
-                  context: context,
-                  delegate: ProductSearchDelegate(searchBloc: _searchBloc),
-                );
-                if (product != null) _orderListBloc.addOrderItem(product: product);
-              },
-            ),
-          ],
-        ),
-        body: StreamBuilder(
-          stream: _orderListBloc.orderItems,
-          builder: (BuildContext context, AsyncSnapshot<List<Item>> snapshot) {
+      child: StreamBuilder<Order>(
+          stream: _orderListBloc.order,
+          builder: (BuildContext context, AsyncSnapshot<Order> snapshot) {
             if (!snapshot.hasData) {
-              return Center();
+              return Scaffold(
+                appBar: AppBar(),
+                body: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
             }
-            return _OrderListViewBuilder(items: snapshot.data);
-          },
-        ),
-      ),
+
+            return Scaffold(
+              appBar: AppBar(
+                title: _dateStatusText(date: snapshot.data.date, status: snapshot.data.status),
+                actions: <Widget>[
+                  if (snapshot.data.status == "New")
+                    IconButton(
+                      icon: Icon(Icons.send),
+                      onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) {
+                                return _ShowSendConfirmation();
+                              },
+                              fullscreenDialog: true,
+                            ),
+                          ),
+                    ),
+                  if (snapshot.data.status == "New")
+                    IconButton(
+                      icon: Icon(Icons.search),
+                      onPressed: () async {
+                        final Product product = await showSearch<Product>(
+                          context: context,
+                          delegate: ProductSearchDelegate(searchBloc: _searchBloc),
+                        );
+                        _orderListBloc.addOrderItem(product: product);
+                      },
+                    ),
+                ],
+              ),
+              body: StreamBuilder(
+                stream: _orderListBloc.orderItems,
+                builder: (BuildContext context, AsyncSnapshot<List<Item>> snapshot) {
+                  if (!snapshot.hasData) {
+                    return Container();
+                  }
+                  return _OrderListViewBuilder(items: snapshot.data);
+                },
+              ),
+            );
+          }),
     );
   }
 
-  Widget _dateText(int date) {
+  Widget _dateStatusText({int date, String status}) {
     DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(date * 1000);
     DateFormat format = DateFormat.MMMMd();
     String dateString = format.format(dateTime);
 
-    return Text(dateString);
+    return Text('$dateString ($status)');
+  }
+}
+
+class _ShowSendConfirmation extends StatefulWidget {
+  @override
+  _ShowSendConfirmationState createState() => _ShowSendConfirmationState();
+}
+
+class _ShowSendConfirmationState extends State<_ShowSendConfirmation> {
+  final _textEditingController = TextEditingController();
+
+  @override
+  void dispose() {
+    super.dispose();
+    _textEditingController.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    OrderListBloc _orderListBloc = BlocProvider.of<OrderListBloc>(context);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Review Order"),
+      ),
+      body: Column(
+        children: <Widget>[
+          Text("Special Instruction"),
+          RaisedButton(
+            child: Text("SEND"),
+            onPressed: () {},
+          ),
+          RaisedButton(
+            child: Text("CANCEL"),
+            onPressed: () {},
+          )
+        ],
+      ),
+    );
   }
 }
 
@@ -114,16 +168,16 @@ class _OrderListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    OrderListBloc orderListBloc = BlocProvider.of<OrderListBloc>(context);
+    OrderListBloc _orderListBloc = BlocProvider.of<OrderListBloc>(context);
 
     String requested = item.quantityRequested.toString();
     String uom = item.product.uom;
 
-    Future<String> _showDialog(BuildContext context) async {
+    Future<String> _showEditQuantityDialog(BuildContext context) async {
       return showDialog(
         context: context,
         builder: (BuildContext context) {
-          return _ShowDialogForm(item: item);
+          return _ShowEditQuantityDialog(item: item);
         },
       );
     }
@@ -142,7 +196,7 @@ class _OrderListTile extends StatelessWidget {
           ),
         ),
       ),
-      onDismissed: (direction) => orderListBloc.removeOrderItem(item: item),
+      onDismissed: (_) => _orderListBloc.removeOrderItem(item: item),
       direction: DismissDirection.endToStart,
       child: ListTile(
         title: Text(
@@ -151,33 +205,33 @@ class _OrderListTile extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
         ),
         subtitle: Text("$requested $uom"),
-        trailing: Icon(Icons.edit),
+        trailing: (item.itemStatus != "Filled" && item.itemStatus != "Order Exceeded") ? Icon(Icons.edit) : Icon(null),
         onTap: () async {
-          String quantity = await _showDialog(context);
-          if (quantity != null) orderListBloc.modifyRequestedQuantity(item: item, quantity: int.parse(quantity));
+          final String quantity = await _showEditQuantityDialog(context);
+          _orderListBloc.modifyRequestedQuantity(item: item, quantity: quantity);
         },
       ),
     );
   }
 }
 
-class _ShowDialogForm extends StatefulWidget {
-  _ShowDialogForm({this.item});
+class _ShowEditQuantityDialog extends StatefulWidget {
+  _ShowEditQuantityDialog({this.item});
 
   final Item item;
 
   @override
-  _ShowDialogFormState createState() => _ShowDialogFormState();
+  _ShowEditQuantityDialogState createState() => _ShowEditQuantityDialogState();
 }
 
-class _ShowDialogFormState extends State<_ShowDialogForm> {
+class _ShowEditQuantityDialogState extends State<_ShowEditQuantityDialog> {
   TextEditingController _textEditingController;
 
   @override
   void initState() {
     super.initState();
-    _textEditingController =
-        TextEditingController(text: widget.item.quantityRequested == 0 ? "" : widget.item.quantityRequested.toString());
+    _textEditingController = TextEditingController.fromValue(
+        TextEditingValue(text: widget.item.quantityRequested == 0 ? "" : widget.item.quantityRequested.toString()));
   }
 
   @override
@@ -199,12 +253,13 @@ class _ShowDialogFormState extends State<_ShowDialogForm> {
       ),
       actions: <Widget>[
         FlatButton(
-          child: Text("CANCEL"),
+          child: Text("DONE"),
           onPressed: () => Navigator.pop(context),
         ),
         FlatButton(
           child: Text("ACCEPT"),
-          onPressed: () => Navigator.pop(context, _textEditingController.text),
+          onPressed: () =>
+              Navigator.pop(context, _textEditingController.text == null ? 0 : _textEditingController.text),
         )
       ],
     );

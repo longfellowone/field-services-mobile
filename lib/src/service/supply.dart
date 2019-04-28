@@ -98,6 +98,17 @@ class SupplyService extends ServiceBase {
     }
   }
 
+  Future<SendOrderResponse> sendOrder({String orderId, String comments}) async {
+    try {
+      return await _client.sendOrder(SendOrderRequest()
+        ..id = orderId
+        ..comments = comments);
+    } catch (e) {
+      print('Caught error: $e');
+      return e;
+    }
+  }
+
   Future<ProductSearchResponse> search({String query}) async {
     try {
       return await _client.productSearch(ProductSearchRequest()..name = query);

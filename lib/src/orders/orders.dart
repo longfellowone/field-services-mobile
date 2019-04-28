@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:myapp/src/bloc/bloc_provider.dart';
@@ -80,7 +82,8 @@ class _OrdersListTile extends StatelessWidget {
     String status = orderSummary.status;
 
     return Dismissible(
-      key: Key(orderSummary.id),
+      // Key hack to keep from crashing list with loss of network
+      key: Key(orderSummary.id + Random().nextInt(10000).toString()),
       background: Container(
         color: Colors.red,
         alignment: AlignmentDirectional.centerEnd,

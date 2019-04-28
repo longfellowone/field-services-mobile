@@ -29,6 +29,7 @@ class OrderListBloc extends BlocBase {
   }
 
   void addOrderItem({Product product}) async {
+    if (product == null) return;
     try {
       AddOrderItemResponse response = await service.addOrderItem(orderId: id, product: product);
       _orderListController.add(response.order);
@@ -42,11 +43,17 @@ class OrderListBloc extends BlocBase {
     } catch (e) {}
   }
 
-  void modifyRequestedQuantity({Item item, int quantity}) async {
-    if (item.quantityRequested == null) return;
+  void modifyRequestedQuantity({Item item, String quantity}) async {
     try {
       ModifyRequestedQuantityResponse response =
-          await service.modifyRequestedQuantity(orderId: id, item: item, quantity: quantity);
+          await service.modifyRequestedQuantity(orderId: id, item: item, quantity: int.parse(quantity));
+      _orderListController.add(response.order);
+    } catch (e) {}
+  }
+
+  void sendOrder({String comments}) async {
+    try {
+      SendOrderResponse response = await service.sendOrder(orderId: id, comments: comments);
       _orderListController.add(response.order);
     } catch (e) {}
   }

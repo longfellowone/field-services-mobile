@@ -60,14 +60,16 @@ class ProductSearchDelegate extends SearchDelegate<Product> {
         return ListView.builder(
           itemCount: snapshot.data.length,
           itemBuilder: (BuildContext context, int index) {
+            final Product product = snapshot.data[index].product;
+
             return ListTile(
               title: Text(
-                snapshot.data[index].product.name,
+                product.name,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
               onTap: () {
-                close(context, snapshot.data[index].product);
+                close(context, product);
               },
             );
           },

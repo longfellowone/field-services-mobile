@@ -19,6 +19,7 @@ class OrdersBloc extends BlocBase {
   void _findOrderSummaries({String projectId}) async {
     try {
       FindProjectOrderDatesResponse response = await service.findProjectOrderDates(projectId: projectId);
+
       _list.addAll(response.orders);
       _ordersController.add(_list);
     } catch (e) {}
@@ -38,6 +39,7 @@ class OrdersBloc extends BlocBase {
     try {
       _list.remove(orderSummary);
       _ordersController.add(_list);
+
       await service.deleteOrder(orderId: orderSummary.id);
     } catch (e) {
       _list.insert(index, orderSummary);
