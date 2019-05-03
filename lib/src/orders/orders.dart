@@ -15,7 +15,7 @@ class OrdersWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SupplyService _supply = ServiceProvider.of<SupplyService>(context);
+    final SupplyService _supply = ServiceProvider.of<SupplyService>(context);
 
     return BlocProvider<OrdersBloc>(
       bloc: OrdersBloc(service: _supply, projectId: 'cf510766-faf7-415e-a067-0c5ae5cb2ae8'),
@@ -33,7 +33,7 @@ class OrdersWidget extends StatelessWidget {
 class _NewOrderFloatingActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    OrdersBloc _ordersBloc = BlocProvider.of<OrdersBloc>(context);
+    final OrdersBloc _ordersBloc = BlocProvider.of<OrdersBloc>(context);
 
     return FloatingActionButton(
       child: Icon(Icons.add),
@@ -45,7 +45,7 @@ class _NewOrderFloatingActionButton extends StatelessWidget {
 class _OrdersListViewBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    OrdersBloc _ordersBloc = BlocProvider.of<OrdersBloc>(context);
+    final OrdersBloc _ordersBloc = BlocProvider.of<OrdersBloc>(context);
 
     return StreamBuilder(
       stream: _ordersBloc.orderSummaries,
@@ -74,12 +74,21 @@ class _OrdersListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    OrdersBloc _ordersBloc = BlocProvider.of<OrdersBloc>(context);
+    final OrdersBloc _ordersBloc = BlocProvider.of<OrdersBloc>(context);
 
-    DateTime date = DateTime.fromMillisecondsSinceEpoch(orderSummary.date * 1000);
-    DateFormat format = DateFormat.yMMMMEEEEd();
-    String dateString = format.format(date);
-    String status = orderSummary.status;
+    final DateTime date = DateTime.fromMillisecondsSinceEpoch(orderSummary.date * 1000);
+    final DateFormat format = DateFormat.yMMMMEEEEd();
+    final String dateString = format.format(date);
+    final String status = orderSummary.status;
+
+    Future<void> _pushOrderListWidget() {
+      return Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => OrderListWidget(orderId: orderSummary.id),
+        ),
+      );
+    }
 
     return Dismissible(
       // Key hack to keep from crashing list with loss of network
@@ -102,13 +111,8 @@ class _OrdersListTile extends StatelessWidget {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
-        trailing: (status == "New") ? Icon(Icons.edit) : Icon(Icons.keyboard_arrow_right),
-        onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (BuildContext context) => OrderListWidget(orderId: orderSummary.id),
-              ),
-            ),
+        trailing: (status == "Draft") ? Icon(Icons.edit) : Icon(Icons.keyboard_arrow_right),
+        onTap: () => _pushOrderListWidget(),
       ),
     );
   }

@@ -26,7 +26,10 @@ class OrdersBloc extends BlocBase {
     try {
       // TODO
       CreateOrderResponse response = await service.createOrder(
-          email: "eamil", foreman: "foreman", name: "name", projectId: "cf510766-faf7-415e-a067-0c5ae5cb2ae8");
+          email: "mwright@plan-group.com",
+          foreman: "Matt Wright",
+          name: "Argyle Secondary School",
+          projectId: "cf510766-faf7-415e-a067-0c5ae5cb2ae8");
 
       _ordersController.add(_ordersController.value..insert(0, response.order));
     } catch (e) {}

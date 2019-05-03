@@ -31,5 +31,5 @@ client.findOrder({id:'7e55aa12-2e6a-4f21-b01a-09503c755180'},pr)
 Navigator.pushNamedAndRemoveUntil(context, "/", (route) => false);
 Navigator.popUntil(context, ModalRoute.withName("/"));
 
-fluter build apk
+flutter build apk
 flutter install

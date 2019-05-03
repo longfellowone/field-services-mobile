@@ -26,7 +26,7 @@ class _OrderListWidgetState extends State<OrderListWidget> {
 
   void didChangeDependencies() {
     super.didChangeDependencies();
-    SupplyService _supply = ServiceProvider.of<SupplyService>(context);
+    final SupplyService _supply = ServiceProvider.of<SupplyService>(context);
 
     _orderListBloc = OrderListBloc(
       service: _supply,
@@ -34,6 +34,20 @@ class _OrderListWidgetState extends State<OrderListWidget> {
     );
 
     _searchBloc = SearchBloc(service: _supply);
+  }
+
+  Future<void> _pushShowSendConfirmation({OrderListBloc bloc}) {
+    return Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) {
+          return _ShowSendConfirmation(
+            bloc: bloc,
+          );
+        },
+        fullscreenDialog: true,
+      ),
+    );
   }
 
   @override
@@ -56,20 +70,12 @@ class _OrderListWidgetState extends State<OrderListWidget> {
               appBar: AppBar(
                 title: _dateStatusText(date: snapshot.data.date, status: snapshot.data.status),
                 actions: <Widget>[
-                  if (snapshot.data.status == "New")
+                  if (snapshot.data.status == "Draft")
                     IconButton(
                       icon: Icon(Icons.send),
-                      onPressed: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (BuildContext context) {
-                                return _ShowSendConfirmation();
-                              },
-                              fullscreenDialog: true,
-                            ),
-                          ),
+                      onPressed: () => _pushShowSendConfirmation(bloc: _orderListBloc),
                     ),
-                  if (snapshot.data.status == "New")
+                  if (snapshot.data.status == "Draft")
                     IconButton(
                       icon: Icon(Icons.search),
                       onPressed: () async {
@@ -97,15 +103,19 @@ class _OrderListWidgetState extends State<OrderListWidget> {
   }
 
   Widget _dateStatusText({int date, String status}) {
-    DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(date * 1000);
-    DateFormat format = DateFormat.MMMMd();
-    String dateString = format.format(dateTime);
+    final DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(date * 1000);
+    final DateFormat format = DateFormat.MMMMd();
+    final String dateString = format.format(dateTime);
 
     return Text('$dateString ($status)');
   }
 }
 
 class _ShowSendConfirmation extends StatefulWidget {
+  _ShowSendConfirmation({this.bloc});
+
+  final OrderListBloc bloc;
+
   @override
   _ShowSendConfirmationState createState() => _ShowSendConfirmationState();
 }
@@ -121,16 +131,87 @@ class _ShowSendConfirmationState extends State<_ShowSendConfirmation> {
 
   @override
   Widget build(BuildContext context) {
-//    OrderListBloc _orderListBloc = BlocProvider.of<OrderListBloc>(context);
+    // https://stackoverflow.com/questions/45774203/flutter-listview-shrink-wrap-nested-listview
 
     return Scaffold(
       appBar: AppBar(
         title: Text("Review Order"),
       ),
-      body: CustomScrollView(),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text('Special Instructions'),
+            SizedBox(height: 8.0),
+            TextField(
+              decoration: InputDecoration(
+                fillColor: Colors.grey[200],
+                filled: true,
+//                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey[200], width: 0.0),
+                ),
+              ),
+              maxLines: 10,
+              controller: _textEditingController,
+            ),
+            SizedBox(height: 8.0),
+            SizedBox(
+              width: double.infinity,
+              child: RaisedButton(
+                color: Colors.blue,
+                textColor: Colors.white,
+                child: Text("SEND"),
+                onPressed: () {
+                  widget.bloc.sendOrder(comments: _textEditingController.text);
+                  Navigator.pop(context);
+                },
+              ),
+            ),
+            SizedBox(
+              width: double.infinity,
+              child: RaisedButton(
+                child: Text("CANCEL"),
+                onPressed: () => Navigator.pop(context),
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 }
+
+//StreamBuilder<List<Item>>(
+//stream: widget.items,
+//builder: (BuildContext context, AsyncSnapshot<List<Item>> snapshot) {
+//if (!snapshot.hasData) {
+//return Container();
+//}
+//return Expanded(
+//child: ListView.builder(
+//itemCount: snapshot.data.length,
+//physics: ClampingScrollPhysics(),
+//shrinkWrap: true,
+//itemBuilder: (BuildContext context, int index) => _ItemConfirmationCard(
+//item: snapshot.data[index],
+//),
+//),
+//);
+//},
+//)
+
+//class _ItemConfirmationCard extends StatelessWidget {
+//  _ItemConfirmationCard({this.item});
+//
+//  final Item item;
+//
+//  @override
+//  Widget build(BuildContext context) {
+//    return Text(item.product.name);
+//  }
+//}
 
 class _OrderListViewBuilder extends StatelessWidget {
   _OrderListViewBuilder({this.items});
@@ -156,17 +237,15 @@ class _OrderListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    OrderListBloc _orderListBloc = BlocProvider.of<OrderListBloc>(context);
+    final OrderListBloc _orderListBloc = BlocProvider.of<OrderListBloc>(context);
 
-    String requested = item.quantityRequested.toString();
-    String uom = item.product.uom;
+    final String requested = item.quantityRequested.toString();
+    final String uom = item.product.uom;
 
     Future<String> _showEditQuantityDialog(BuildContext context) async {
       return showDialog(
         context: context,
-        builder: (BuildContext context) {
-          return _ShowEditQuantityDialog(item: item);
-        },
+        builder: (BuildContext context) => _ShowEditQuantityDialog(item: item),
       );
     }
 
@@ -193,7 +272,7 @@ class _OrderListTile extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
         ),
         subtitle: Text("$requested $uom"),
-        trailing: (item.itemStatus != "Filled" && item.itemStatus != "Order Exceeded") ? Icon(Icons.edit) : Icon(null),
+        trailing: (item.itemStatus == "New") ? Icon(Icons.edit) : Icon(null),
         onTap: () async {
           final String quantity = await _showEditQuantityDialog(context);
           _orderListBloc.modifyRequestedQuantity(item: item, quantity: quantity);
@@ -237,7 +316,7 @@ class _ShowEditQuantityDialogState extends State<_ShowEditQuantityDialog> {
         autofocus: true,
         keyboardType: TextInputType.number,
         textInputAction: TextInputAction.done,
-        maxLength: 8,
+        maxLength: 6,
       ),
       actions: <Widget>[
         FlatButton(

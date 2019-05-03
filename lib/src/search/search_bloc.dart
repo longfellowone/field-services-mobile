@@ -11,6 +11,7 @@ class SearchBloc extends BlocBase {
 
   BehaviorSubject<List<Result>> _searchController = BehaviorSubject<List<Result>>();
   Observable<List<Result>> get results => _searchController.stream;
+  // Use switchMap with debounce
 
   void search({String query}) async {
     if (query == "") return;
