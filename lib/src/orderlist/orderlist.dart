@@ -240,6 +240,7 @@ class _OrderListTile extends StatelessWidget {
     final OrderListBloc _orderListBloc = BlocProvider.of<OrderListBloc>(context);
 
     final String requested = item.quantityRequested.toString();
+    final String waiting = item.quantityRemaining.toString();
     final String uom = item.product.uom;
 
     Future<String> _showEditQuantityDialog(BuildContext context) async {
@@ -247,6 +248,103 @@ class _OrderListTile extends StatelessWidget {
         context: context,
         builder: (BuildContext context) => _ShowEditQuantityDialog(item: item),
       );
+    }
+
+    Future<String> _showReceiveItemDialog(BuildContext context) async {
+      return showDialog(
+        context: context,
+        builder: (BuildContext context) => _ReceiveItemDialog(item: item),
+      );
+    }
+
+    ListTile _itemStatusNew() {
+      return ListTile(
+        title: Text(
+          item.product.name,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        subtitle: Text("$requested $uom"),
+        trailing: Icon(Icons.edit),
+        onTap: () async {
+          final String quantity = await _showEditQuantityDialog(context);
+          _orderListBloc.modifyRequestedQuantity(item: item, quantity: quantity);
+        },
+      );
+    }
+
+    ListTile _itemStatusToBeOrdered() {
+      return ListTile(
+        title: Text(
+          item.product.name,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        subtitle: Text("$requested $uom (Pending)"),
+      );
+    }
+
+    ListTile _itemStatusWaiting() {
+      return ListTile(
+        title: Text(
+          item.product.name,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        subtitle: Text("$waiting $uom (${item.itemStatus})"),
+        trailing: Icon(Icons.check_box_outline_blank),
+        onTap: () async {
+          final String quantity = await _showReceiveItemDialog(context);
+          print(quantity);
+          _orderListBloc.receiveOrderItem(item: item, quantity: quantity);
+        },
+      );
+    }
+
+    ListTile _itemStatusComplete() {
+      return ListTile(
+        title: Text(
+          item.product.name,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        subtitle: Text("$requested $uom (Received)"),
+        trailing: Icon(Icons.check_box),
+      );
+    }
+
+    ListTile _showIfItemStatus() {
+      switch (item.itemStatus) {
+        case "New":
+          {
+            return _itemStatusNew();
+          }
+          break;
+
+        case "To Be Ordered":
+          {
+            return _itemStatusToBeOrdered();
+          }
+          break;
+
+        case "Waiting":
+          {
+            return _itemStatusWaiting();
+          }
+          break;
+
+        case "Back Ordered":
+          {
+            return _itemStatusWaiting();
+          }
+          break;
+
+        default:
+          {
+            return _itemStatusComplete();
+          }
+          break;
+      }
     }
 
     return Dismissible(
@@ -265,19 +363,58 @@ class _OrderListTile extends StatelessWidget {
       ),
       onDismissed: (_) => _orderListBloc.removeOrderItem(item: item),
       direction: DismissDirection.endToStart,
-      child: ListTile(
-        title: Text(
-          item.product.name,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
-        subtitle: Text("$requested $uom"),
-        trailing: (item.itemStatus == "New") ? Icon(Icons.edit) : Icon(null),
-        onTap: () async {
-          final String quantity = await _showEditQuantityDialog(context);
-          _orderListBloc.modifyRequestedQuantity(item: item, quantity: quantity);
-        },
+      child: _showIfItemStatus(),
+    );
+  }
+}
+
+class _ReceiveItemDialog extends StatefulWidget {
+  _ReceiveItemDialog({this.item});
+
+  final Item item;
+
+  @override
+  _ReceiveItemDialogState createState() => _ReceiveItemDialogState();
+}
+
+class _ReceiveItemDialogState extends State<_ReceiveItemDialog> {
+  TextEditingController _textEditingController;
+
+  @override
+  void initState() {
+    super.initState();
+    _textEditingController =
+        TextEditingController.fromValue(TextEditingValue(text: widget.item.quantityRemaining.toString()));
+  }
+
+  @override
+  void dispose() {
+    _textEditingController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text("Quantity Received"),
+      content: TextField(
+        controller: _textEditingController,
+        autofocus: true,
+        keyboardType: TextInputType.number,
+        textInputAction: TextInputAction.done,
+        maxLength: 6,
       ),
+      actions: <Widget>[
+        FlatButton(
+          child: Text("CANCEL"),
+          onPressed: () => Navigator.pop(context),
+        ),
+        FlatButton(
+          child: Text("DONE"),
+          onPressed: () =>
+              Navigator.pop(context, _textEditingController.text == null ? 0 : _textEditingController.text),
+        )
+      ],
     );
   }
 }

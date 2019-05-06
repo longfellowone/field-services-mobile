@@ -33,3 +33,12 @@ Navigator.popUntil(context, ModalRoute.withName("/"));
 
 flutter build apk
 flutter install
+
+For use with ClusterIP
+kubectl port-forward --namespace "default" "podname" port
+
+To access NodePort
+gcloud compute firewall-rules create grpcsvc --allow tcp:30550
+
+List external IPs
+gcloud compute instances list

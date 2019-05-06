@@ -12,9 +12,10 @@ class SupplyService extends ServiceBase {
 
   void _newSupplyClient() {
     _channel = ClientChannel(
-//      "10.0.2.2",
       "192.168.0.104",
       port: 9090,
+//      "34.83.209.79",
+//      port: 31650,
       options: const ChannelOptions(
         credentials: ChannelCredentials.insecure(),
       ),
@@ -31,9 +32,9 @@ class SupplyService extends ServiceBase {
     }
   }
 
-  Future<FindOrderResponse> findOrder({String id}) async {
+  Future<FindOrderResponse> findOrder({String orderId}) async {
     try {
-      return await _client.findOrder(FindOrderRequest()..id = id);
+      return await _client.findOrder(FindOrderRequest()..id = orderId);
     } catch (e) {
       print('Caught error: $e');
       return e;
@@ -103,6 +104,18 @@ class SupplyService extends ServiceBase {
       return await _client.sendOrder(SendOrderRequest()
         ..id = orderId
         ..comments = comments);
+    } catch (e) {
+      print('Caught error: $e');
+      return e;
+    }
+  }
+
+  Future<ReceiveOrderItemResponse> receiveOrderItem({String orderId, Item item, int quantity}) async {
+    try {
+      return await _client.receiveOrderItem(ReceiveOrderItemRequest()
+        ..id = orderId
+        ..productId = item.product.id
+        ..quantity = quantity);
     } catch (e) {
       print('Caught error: $e');
       return e;

@@ -591,7 +591,8 @@ class OrderSummary extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('OrderSummary', package: const $pb.PackageName('server'))
     ..aOS(1, 'id')
     ..a<$core.int>(2, 'date', $pb.PbFieldType.O3)
-    ..aOS(3, 'status')
+    ..aOS(3, 'projectName')
+    ..aOS(4, 'status')
     ..hasRequiredFields = false
   ;
 
@@ -617,10 +618,15 @@ class OrderSummary extends $pb.GeneratedMessage {
   $core.bool hasDate() => $_has(1);
   void clearDate() => clearField(2);
 
-  $core.String get status => $_getS(2, '');
-  set status($core.String v) { $_setString(2, v); }
-  $core.bool hasStatus() => $_has(2);
-  void clearStatus() => clearField(3);
+  $core.String get projectName => $_getS(2, '');
+  set projectName($core.String v) { $_setString(2, v); }
+  $core.bool hasProjectName() => $_has(2);
+  void clearProjectName() => clearField(3);
+
+  $core.String get status => $_getS(3, '');
+  set status($core.String v) { $_setString(3, v); }
+  $core.bool hasStatus() => $_has(3);
+  void clearStatus() => clearField(4);
 }
 
 class FindProjectOrderDatesRequest extends $pb.GeneratedMessage {
