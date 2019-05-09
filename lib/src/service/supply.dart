@@ -14,8 +14,6 @@ class SupplyService extends ServiceBase {
     _channel = ClientChannel(
       "192.168.0.104",
       port: 9090,
-//      "34.83.209.79",
-//      port: 31650,
       options: const ChannelOptions(
         credentials: ChannelCredentials.insecure(),
       ),
